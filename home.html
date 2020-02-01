@@ -1,0 +1,228 @@
+<html>
+<head>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="modalWindow.css">
+
+  <script src="delaunay.js"></script>
+  <script src="nerdamer.core.js"></script>
+  <script src="Algebra.js"></script>
+  <script src="Calculus.js"></script>
+  <script src="Solve.js"></script>
+  <script src="Extra.js"></script>
+  <script src="gifshot.js"></script>
+  <script src="canvas2image.js"></script>
+
+
+  <script src="importColors.js" defer></script>
+  <script src="plotGraphs.js" defer></script>
+  <script src="handleFiles.js" defer></script>
+  <script src="addWorkspace.js" defer></script>
+  <script src="measures.js" defer></script>
+
+
+  <script src="plotly-latest.min.js"></script>
+
+
+</head>
+<body>
+  <!-- Menu -->
+  <div class="menu">
+    <span class="tabsGroup menuItems">
+      <ul>
+
+      </ul>
+    </span>
+
+    <span class="exportImport menuItems">
+      <ul>
+        <li id="export">Export</li>
+        <li id="importCol"><label for="cfiles">Import colors</label><input type="file" id="cfiles" value="Import colors" name="colorFiles[]" multiple/></li>
+        <li id="import"><label for="files">Import dataset</label><input type="file" id="files" value="Import datasets" name="files[]" multiple/></li>
+        <li id="addW">Add workspace</li>
+      </ul>
+    </span>
+  </div>
+
+  <div style="display: none;" class="container" id="container">
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">&times;</span>
+          <h2>Add a new graph</h2>
+        </div>
+        <div class="modal-body">
+          <span></span>
+          <ul>
+              <span>function customGraph(inData) {</span>
+                <br/>
+              <textarea placeholder="JavaScript code" class="JSCode" rows="20", cols="60" resizable></textarea>
+              <br/>
+              <span> &emsp; return outData; <br> }</span>
+          </ul>
+          <div class="plotButtonGroup">
+            <span class="plotButton plotHeat">Plot heatmap/GVR</span>
+            <span class="plotButton plotScatter2d">Plot 2D scatter</span>
+            <span class="plotButton plotScatter3d">Plot 3D scatter</span>
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- -->
+
+
+
+    <!-- left side menu -->
+    <div class="leftMenu">
+      <!-- Element -->
+      <div class="leftGroup">
+        <div class="select">
+
+          <select class="datasetList select-text">
+            <option></option>
+          </select>
+          <span class="select-highlight"></span>
+          <label class="select-label">Choose a dataset</label>
+        </div>
+
+      </div>
+
+      <!-- -->
+
+
+
+      <!-- Element -->
+      <div class="leftGroup">
+        <div class="input">
+
+          <input type="text" class="framerate select-text"></input>
+          <span class="select-highlight"></span>
+          <span class="select-bar"></span>
+          <label class="select-label">Framerate [fps]</label>
+        </div>
+
+      </div>
+      <!-- -->
+
+      <!-- Group title -->
+      <p class="groupTitle">Frames</p>
+      <!-- -->
+
+      <!-- Element -->
+      <div class="leftGroup">
+
+      
+        <div class="input">
+          <input type="range" min="0" max="80000" class="startFrame select-text"></input>
+          <span class="select-highlight"></span>
+          <label class="select-label">First frame</label>
+        </div>
+      </div>
+      <!-- -->
+
+
+      <!-- Element -->
+      <div class="leftGroup">
+        <div class="input">
+
+          <input type="range" min="0" max="80000" class="endFrame select-text"></input>
+          <span class="select-highlight"></span>
+          <label class="select-label">Last frame</label>
+        </div>
+
+      </div>
+      <!-- -->
+
+  <span>
+     
+        <input class="frameStartS frameNumSel select-text" type="number"></input>
+        <span class="smallText">-</span>
+        <input class="frameEndS frameNumSel select-text" type="number"></input>
+        </span>
+
+      <!-- Group title -->
+      <p class="groupTitle">Events</p>
+      <!-- -->
+
+      <!-- Element -->
+      <div class="leftGroup">
+
+        <div class="input">
+
+          <input type="text" class="eventTitle select-text"></input>
+          <span class="select-highlight"></span>
+          <span class="select-bar"></span>
+          <label class="select-label">Title</label>
+        </div>
+
+      </div>
+      <!-- -->
+
+      <!-- Element -->
+      <div class="leftGroup">
+        <div class="input">
+
+          <input type="number" class="eventTimestamp selectTimestamp select-text"></input>
+          <span class="select-highlight"></span>
+          <span class="select-bar"></span>
+          <label class="select-label">Timestamp</label>
+        </div>
+
+      </div>
+      <!-- -->
+
+      <!-- Element -->
+      <div class="leftGroup">
+        <div class="select">
+
+          <select id="measuresList" class="eventColor select-text">
+            <option></option>
+          </select>
+          <span class="select-highlight"></span>
+          <label class="select-label">Color</label>
+
+        </div>
+
+        <p class="addEvent">Add event</p>
+        <p class="editEventB">Update</p>
+
+      </div>
+      <!-- -->
+
+      <!-- Divider -->
+  
+      <!-- -->
+
+      <div class="leftGroup eventList">
+        <ul class="ulEvents">
+
+        </ul>
+      </div>
+
+    </div>
+    <!-- END leftMenu -->
+
+    <!-- Graphs -->
+    <div class="graphs">
+      <ul>
+
+       <li>
+
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</body>
+</html>

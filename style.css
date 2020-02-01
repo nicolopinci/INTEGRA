@@ -1,0 +1,549 @@
+body {
+  margin: 0px;
+  background-color: #BBBBBB;
+  margin-left: 2vw;
+  margin-right: 2vw;
+  margin-top: 10px;
+  font-family: 'Helvetica','Arial',sans-serif;
+  font-size: 14px;
+  }
+
+  ul {
+  list-style-type: none;
+}
+
+  ::selection {
+    background-color: rgba(0,0,0,0.2);
+  }
+
+  .menu {
+  background-color: transparent;
+  color: black;
+  float: left;
+  width: 96vw;
+  //height: 60px;
+  border-top-left-radius: 15px;
+  margin-top: 7px;
+}
+
+.tabs {
+  float: left;
+}
+
+.menuItems ul{
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+}
+
+.graphs ul {
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* Workspace tab */
+.menuItems li{
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  padding: 15px;
+  background-color: #eeeeee;
+
+}
+
+.graphs li{
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  padding: 10px;
+  float: left;
+
+}
+
+
+.exportImport li, .exportImport, .addEvent, .editEventB {
+  float: right;
+}
+
+.exportImport ul {
+  margin-right: 13px;
+}
+
+.tabsGroup li, .tabsGroup {
+  float: left;
+//  border-top-right-radius: 15px;
+
+}
+
+.tabsGroup li {
+  height: 15px;
+  width: 90px;
+  border-radius: 5px;
+  margin-left: 20px;
+  float: left;
+  margin-bottom: 5px;
+  box-shadow: 3px 0 5px -2px #444444;
+
+}
+
+/*.tabsGroup ul li:first-child {
+  border-top-left-radius: 15px;
+  width: 80px;
+}
+
+.tabsGroup > ul li:nth-child(n+2) {
+  position: relative;
+  width: 100px;
+  margin-left: -20px;
+  z-index: -100;
+  box-shadow: inset 0px -27px 47px -42px rgba(0,0,0,0.75), 3px 0 5px -2px #444444;
+}*/
+
+
+.JSCode {
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+}
+
+.leftMenu {
+  width: 150;
+  padding: 10px;
+  //padding-top: 50px;
+  //padding-bottom: 50px;
+  margin-left: 15px;
+  float: left;
+}
+
+.leftMenu, .graphs {
+  //box-shadow: 0px -3px 3px -1px #666666;
+}
+
+.leftGroup {
+  background-color: yellow;
+  height: auto;
+  padding-top: 20px;
+  background-color: #eeeeee;
+  margin-top: 10px;
+
+}
+
+.graphs {
+  //background-color: white;
+  overflow: hidden;
+  padding: 10px;
+  border-bottom-right-radius: 15px;
+  //border-top-right-radius: 15px;
+}
+
+
+.graphPreview {
+  resize: both;
+  overflow: auto;
+}
+
+.addNewGraph {
+  background-image: url('newGraph.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  resize: none;
+  overflow: hidden;
+  width: 200px !important;
+  height: 200px !important;
+}
+
+#files, #cfiles {
+  display: none;
+}
+
+li:hover, label:hover {
+  cursor: pointer;
+}
+
+.graphPreview {
+  //background-image: url('NoImg.jpeg');
+  //background-size: 250px;
+  height: 500px;
+  width: 800px;
+}
+
+.graphPreview:hover {
+  box-shadow: 0px 0px 5px 5px #dddddd;
+  cursor: pointer;
+}
+
+.select, .input {
+  font-family:
+    'Roboto','Helvetica','Arial',sans-serif;
+	 position: relative;
+  width: 150px;
+}
+
+.select-text {
+	position: relative;
+	font-family: inherit;
+	width: 150px;
+	padding: 10px;
+	font-size: 14px;
+	border-radius: 0;
+	border: none;
+	border-bottom: 1px solid rgba(0,0,0, 0.12);
+}
+
+/* Remove focus */
+.select-text:focus {
+	outline: none;
+	border-bottom: 1px solid rgba(0,0,0, 0);
+}
+
+	/* Use custom arrow */
+.select .select-text {
+	appearance: none;
+	-webkit-appearance:none
+}
+
+.select:after {
+	position: absolute;
+	top: 18px;
+	right: 10px;
+	/* Styling the down arrow */
+	width: 0;
+	height: 0;
+	padding: 0;
+	content: '';
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 6px solid rgba(0, 0, 0, 0.12);
+	pointer-events: none;
+}
+
+
+/* LABEL ======================================= */
+.select-label, .text-label {
+	color: rgba(0,0,0, 0.26);
+	font-size: 18px;
+	font-weight: normal;
+	position: absolute;
+	pointer-events: none;
+	left: 0;
+	top: 10px;
+	transition: 0.2s ease all;
+}
+
+/* active state */
+.select-text:focus ~ .select-label, .select-text:valid ~ .select-label {
+	color: black;
+	top: -20px;
+	transition: 0.2s ease all;
+	font-size: 14px;
+}
+
+/* BOTTOM BARS ================================= */
+.select-bar {
+	position: relative;
+	display: block;
+	width: 150px;
+}
+
+.select-bar:before, .select-bar:after {
+	content: '';
+	height: 2px;
+	width: 0;
+	bottom: 1px;
+	position: absolute;
+	background: black;
+	transition: 0.2s ease all;
+}
+
+.select-bar:before {
+	left: 50%;
+}
+
+.select-bar:after {
+	right: 50%;
+}
+
+/* active state */
+.select-text:focus ~ .select-bar:before, .select-text:focus ~ .select-bar:after {
+	width: 50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.select-highlight {
+	position: absolute;
+	height: 60%;
+	width: 100px;
+	top: 25%;
+	left: 0;
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+.container {
+  // position: absolute;
+/*  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-top-right-radius: 15px;*/
+  border-radius: 10px;
+  margin-bottom: 30px;
+
+  width: 96vw;
+//  top: 60px;
+  box-shadow: 5px 5px 5px #555555;
+  background-color: #eeeeee;
+
+}
+
+#export, #import, #importCol, .plotButton, .editEventB, #addW, .addV {
+color: #494949 !important;
+text-decoration: none;
+background: #eeeeee;
+padding: 8px;
+border: 1px solid #eeeeee !important;
+border-radius: 5px;
+display: inline-block;
+transition: all 0.4s ease 0s;
+margin-right: 10px;
+margin-top: 7px;
+margin-bottom: 5px;
+font-size: 15px;
+cursor: pointer;
+
+}
+
+.plotButtonGroup {
+  padding-left: 40px;
+}
+
+.addEvent {
+color: #494949 !important;
+text-decoration: none;
+background: #fff;
+padding: 8px;
+border: 1px solid #fff !important;
+border-radius: 5px;
+display: inline-block;
+transition: all 0.4s ease 0s;
+margin-right: 10px;
+margin-top: 7px;
+margin-bottom: 5px;
+font-size: 15px;
+cursor: pointer;
+
+}
+
+#addW:hover, #export:hover, #import:hover, #importCol:hover, .addEvent:hover {
+  color: #ffffff !important;
+background: #012345;
+border-color: #012345 !important;
+transition: all 0.4s ease 0s;
+}
+
+.editEventB {
+  display: none;
+}
+
+.editEventB:hover {
+  color: #ffffff !important;
+background: rgb(209, 172, 1);
+border-color: rgb(79, 1, 1) !important;
+transition: all 0.4s ease 0s;
+}
+
+.groupTitle {
+  font-size: 16px;
+  padding-top: 15px;
+  font-weight: bold;
+  //font-variant: small-caps;
+}
+
+
+.addV:hover, .plotButton:hover {
+  color: #ffffff !important;
+background: #012345;
+border-color: #012345 !important;
+transition: all 0.4s ease 0s;
+}
+
+.addEvent {
+  margin-right: 2px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.afterButton {
+  margin-top: 55px;
+}
+
+.eventList li {
+  padding: 9px;
+  margin-left: -30px;
+}
+
+.eventList li:hover {
+  background-color: white;
+}
+
+.eventList .editEvent, .eventList .deleteEvent {
+  margin-right: 3px;
+  margin-left: 8px;
+  font-weight: bolder;
+}
+
+
+.eventList .deleteEvent {
+  color: red;
+}
+
+.frameNumSel {
+  width: 45%;
+  margin-top:5px;
+  padding: 7px;
+  font-size: 11px;
+}
+
+.smallText {
+  font-size: 12px;
+}
+
+.modal-body li > span {
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.modal-body li {
+  margin-bottom: 40px;
+}
+
+.pure-material-radio {
+    z-index: 0;
+    position: relative;
+    display: inline-block;
+    color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.87);
+    font-family: var(--pure-material-font, "Helvetica", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Input */
+.pure-material-radio > input {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    z-index: -1;
+    position: absolute;
+    left: -10px;
+    top: -8px;
+    display: block;
+    margin: 0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.6);
+    outline: none;
+    opacity: 0;
+    transform: scale(1);
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s;
+}
+
+/* Span */
+.pure-material-radio > span {
+    display: inline-block;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Circle */
+.pure-material-radio > span::before {
+    content: "";
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 2px 10px 2px 0;
+    border: solid 2px; /* Safari */
+    border-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.6);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    vertical-align: top;
+    transition: border-color 0.2s;
+}
+
+/* Check */
+.pure-material-radio > span::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 0;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(var(--pure-material-primary-rgb, 0, 0, 0));
+    transform: translate(5px, 5px) scale(0);
+    transition: transform 0.2s;
+}
+
+/* Checked */
+.pure-material-radio > input:checked {
+    background-color: rgb(var(--pure-material-primary-rgb, 0, 0, 0));
+}
+
+.pure-material-radio > input:checked + span::before {
+    border-color: rgb(var(--pure-material-primary-rgb, 0, 0, 0));
+}
+
+.pure-material-radio > input:checked + span::after {
+    transform: translate(5px, 5px) scale(1);
+}
+
+/* Hover, Focus */
+.pure-material-radio:hover > input {
+    opacity: 0.04;
+}
+
+.pure-material-radio > input:focus {
+    opacity: 0.12;
+}
+
+.pure-material-radio:hover > input:focus {
+    opacity: 0.16;
+}
+
+/* Active */
+.pure-material-radio > input:active {
+    opacity: 1;
+    transform: scale(0);
+    transition: transform 0s, opacity 0s;
+}
+
+.pure-material-radio > input:active + span::before {
+    border-color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
+}
+
+/* Disabled */
+.pure-material-radio > input:disabled {
+    opacity: 0;
+}
+
+.pure-material-radio > input:disabled + span {
+    color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38);
+    cursor: initial;
+}
+
+.pure-material-radio > input:disabled + span::before {
+    border-color: currentColor;
+}
+
+.pure-material-radio > input:disabled + span::after {
+    background-color: currentColor;
+}
+
+
+
+
