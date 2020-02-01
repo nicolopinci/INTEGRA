@@ -54,7 +54,7 @@ function isFileAlreadyImported(dsl, myFile) {
 }
 
 // Soccer
-function setDataset(evt) {
+/*function setDataset(evt) {
 
   getAllPlayersXYAllFrames(fileMap[this.value]);
   numberOfRecords = getNumberOfRecords(fileMap[this.value]);
@@ -78,26 +78,38 @@ function setDataset(evt) {
 
   return matchArray;
 }
+*/
 
 function getNumberOfRecords(matchString) {
     let matchArray = matchString.split("\n"); // each record is on a new line
     return matchArray.length; // the length is the number of records
 }
 
+
 function getAllPlayersXYAllFrames(matchString) {
-  let matchArray = matchString.split("\n");
+  let matchArray = splitOnNewLine(matchString); // the array contains one line for each timestamp
   let matchPosArray = [];
+
+  // Since the each string in the array can start with one or more spaces, it is necessary to uniform this notation
+  // In particular, the beginning of the string should be the only place where there is more than one space
+  // At the end of the procedure all the strings have to start with one space followed by a non-space char
+  // If there is not a space as first char, therefore it has to be inserted
+  // Then, if two or more spaces are found, they are replaced by a single space
+
   for(let k=0; k<matchArray.length; ++k) {
-  //  let n = "\n";
 
-  if(matchArray[k][0]!=" ") {
-    matchArray[k] = " "+matchArray[k];
-  }
+    if(matchArray[k][0]!=" ") { // if it dows not start with a space
+      matchArray[k] = " " + matchArray[k]; // add a space at the beginning
+    }
+
+    // Now when two spaces or more spaces are found, they are replaced by a single space => replace(/  +/g, ' ')
+    // Then the string is split into arrays when a space is found
     matchPosArray.push(getAllPlayersXYFrame(matchArray[k].replace(/  +/g, ' ').split(" ")));
-    // replace(/\n/g, n+"  ").replace(/  +/g, ' ').replace(/\n/g, n+"   ").
   }
-
   return matchPosArray;
+  // This array contains n arrays, where n is the number of timestamps
+  // Each sub-array contains several arrays, corresponding to the number of players + 1
+  // Ex. of a sub-array: <timestamp, player 1, player 2.... >
 }
 
 function getAllPlayersXYFrame(frameArray) {

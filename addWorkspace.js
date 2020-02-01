@@ -229,7 +229,7 @@ function sortEccAll(eccArray){
   return sortedEccArray;
 }
 
-function chooseDataset(evt) {
+function chooseDataset(evt) { // When a dataset is selected from the datasets list on the left of the interface
 
   let tabID;
   let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
@@ -248,10 +248,10 @@ function chooseDataset(evt) {
 
   switch(fileExtension) {
     case "2d": // soccer match
-      drawPresetGraphs("2d", getAllPlayersXYAllFrames(datasetContent), tabID);
+      drawPresetGraphs("2d", getAllPlayersXYAllFrames(datasetContent), tabID); // draws the default graphs related to the soccer match
       break;
     case "sn": // social network
-      drawPresetGraphs("sn", parseSN(datasetContent), tabID);
+      drawPresetGraphs("sn", parseSN(datasetContent), tabID); // draws the default graphs related to the social network analysis
       break;
     }
 
