@@ -57,11 +57,25 @@ function isFileAlreadyImported(dsl, myFile) {
 function setDataset(evt) {
 
   matchArray = getAllPlayersXYAllFrames(fileMap[this.value]);
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .startFrame").max = matchArray.length;
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .endFrame").max = matchArray.length;
+
+  let tabID;
+  let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
+  for(let t=0; t<existingTabs.length; ++t) { // for each tab
+    if(existingTabs[t].style.display == 'inline-block') { // the workspace is visible
+      tabID = existingTabs[t].id; // remember the ID of that workspace
+    }
+  }
+
+  document.querySelector("#" + tabID + " .startFrame").max = matchArray.length; // set the start frame indicator current value to last frame
+  document.querySelector("#" + tabID + " .endFrame").max = matchArray.length; // set the end frame indicator to the last frame
+
+  document.querySelector("#" + tabID + " .startFrame").value = 0; // set the start frame indicator current value to 0
+  document.querySelector("#" + tabID + " .endFrame").value = matchArray.length; // set the end frame current indicator to the last frame
+
+  document.querySelector("#" + tabID + " .frameStartS").value = 0; // set the numeric start frame indicator current value to 0
+  document.querySelector("#" + tabID + " .frameEndS").value = matchArray.length; // set the numeric end frame current indicator to the last frame
 
   return matchArray;
-
 }
 
 function getAllPlayersXYAllFrames(matchString) {
@@ -192,7 +206,6 @@ function calculateGlobalEccentricity(playerNr, matchArray) {
   return outArr;
 }
 
-
 function calculateGlobalEccAll(matchArray) {
   let outArr = [];
   let trArray = [];
@@ -201,6 +214,6 @@ function calculateGlobalEccAll(matchArray) {
     outArr.push(calculateGlobalEccentricity(i, matchArray));
   }
 
-  
+
   return outArr;
 }
