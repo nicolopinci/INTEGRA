@@ -35,7 +35,7 @@ function handleFileSelect(evt) {
         datasetOption.value = f.name;
         datasetOption.appendChild(optionText);
         document.getElementsByClassName('datasetList')[i].appendChild(datasetOption);
-        document.getElementsByClassName('datasetList')[i].addEventListener("change", setDataset, false);
+        //document.getElementsByClassName('datasetList')[i].addEventListener("change", setDataset, false);
       }
 
 
@@ -56,7 +56,8 @@ function isFileAlreadyImported(dsl, myFile) {
 // Soccer
 function setDataset(evt) {
 
-  matchArray = getAllPlayersXYAllFrames(fileMap[this.value]);
+  getAllPlayersXYAllFrames(fileMap[this.value]);
+  numberOfRecords = getNumberOfRecords(fileMap[this.value]);
 
   let tabID;
   let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
@@ -66,16 +67,21 @@ function setDataset(evt) {
     }
   }
 
-  document.querySelector("#" + tabID + " .startFrame").max = matchArray.length; // set the start frame indicator current value to last frame
-  document.querySelector("#" + tabID + " .endFrame").max = matchArray.length; // set the end frame indicator to the last frame
+  document.querySelector("#" + tabID + " .startFrame").max = numberOfRecords; // set the start frame indicator current value to last frame
+  document.querySelector("#" + tabID + " .endFrame").max = numberOfRecords; // set the end frame indicator to the last frame
 
   document.querySelector("#" + tabID + " .startFrame").value = 0; // set the start frame indicator current value to 0
-  document.querySelector("#" + tabID + " .endFrame").value = matchArray.length; // set the end frame current indicator to the last frame
+  document.querySelector("#" + tabID + " .endFrame").value = numberOfRecords; // set the end frame current indicator to the last frame
 
   document.querySelector("#" + tabID + " .frameStartS").value = 0; // set the numeric start frame indicator current value to 0
-  document.querySelector("#" + tabID + " .frameEndS").value = matchArray.length; // set the numeric end frame current indicator to the last frame
+  document.querySelector("#" + tabID + " .frameEndS").value = numberOfRecords; // set the numeric end frame current indicator to the last frame
 
   return matchArray;
+}
+
+function getNumberOfRecords(matchString) {
+    let matchArray = matchString.split("\n"); // each record is on a new line
+    return matchArray.length; // the length is the number of records
 }
 
 function getAllPlayersXYAllFrames(matchString) {

@@ -102,16 +102,16 @@ function addAnEvent(evt) {
     // Store in memory
     let eventInfo = [document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventTimestamp").value, document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventColor").value];
     eventWsList[this.parentNode.parentNode.parentNode.id.split("ctab")[1]][evTitle] = eventInfo;
-	
+
 	// Store as a graph variable
 	let allGraphs = document.querySelectorAll("#"+this.parentNode.parentNode.parentNode.id+" .graphs li" );
-	
-	
+
+
 	for(let elem = 0; elem < allGraphs.length; ++elem) {
 		if(allGraphs[elem].firstChild.id.includes("SNAD") || allGraphs[elem].firstChild.id.includes("SNINI") ||  allGraphs[elem].firstChild.id.includes("_ECC")) {
 		Plotly.addTraces(allGraphs[elem].firstChild, [{ x: [eventInfo[0]], name: evTitle}]);
 		}
-		
+
 		/*console.log(allGraphs[elem]);
 		allGraphs[elem].firstChild.data[0].evTS = [];
 			allGraphs[elem].firstChild.data[0].evName = [];
@@ -120,7 +120,7 @@ function addAnEvent(evt) {
 				allGraphs[elem].firstChild.data[0].evName.push(evTitle);
 */
 	}
-	
+
     // Handle editing and deletion
     evLi.children[2].addEventListener("click", deleteThisEvent, false);
     evLi.children[0].addEventListener("click", editThisEvent, false);
@@ -145,7 +145,7 @@ function drawPresetGraphs(graphType, parsedData, containerID) {
       newGraphBoxNG.style.width = "690px";
       newGraphBoxNG.style.padding = "4px";
       plotNetwork(newGraphBoxNG.id, parsedData,0);
-	  
+
 	  // Graph with players (animated)
     let newGraphBoxNGA = createNewGraphBox("2d", containerID, "NGA");
       newGraphBoxNGA.style.height = "430px";
@@ -231,33 +231,41 @@ function sortEccAll(eccArray){
 
 function chooseDataset(evt) {
 
-  let fileName = document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id + " .datasetList").value;
-  let containerID = this.parentNode.parentNode.parentNode.parentNode.id;
-  wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]]=this.value;
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").innerHTML = "";
+  let tabID;
+  let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
+  for(let t=0; t<existingTabs.length; ++t) { // for each tab
+    if(existingTabs[t].style.display == 'inline-block') { // the workspace is visible
+      tabID = existingTabs[t].id; // remember the ID of that workspace
+    }
+  }
 
-switch(this.value.split(".")[1]) {
-  case "2d":
-  drawPresetGraphs("2d", getAllPlayersXYAllFrames(fileMap[fileName]), containerID);
-break;
-case "sn":
-drawPresetGraphs("sn", parseSN(fileMap[fileName]), containerID);
-break;
-}
+  let fileName = document.querySelector("#" + tabID + " .datasetList").value; // get the name of the imported dataset
+  wsChosenDS[tabID.split("ctab")[1]] = fileName; // associates the dataset to the current workspace (format <workspace number, file name>)
+  document.querySelector("#" + tabID + " .graphs ul").innerHTML = ""; // deletes all the graphs currently displayed in this workspace
 
+  let fileExtension = fileName.split(".")[1]; // gets the extension of the file (after the first dot)
+  let datasetContent = fileMap[fileName];
 
-createPlusSign(containerID);
+  switch(fileExtension) {
+    case "2d": // soccer match
+      drawPresetGraphs("2d", getAllPlayersXYAllFrames(datasetContent), tabID);
+      break;
+    case "sn": // social network
+      drawPresetGraphs("sn", parseSN(datasetContent), tabID);
+      break;
+    }
 
+    createPlusSign(tabID); // add the + button to add customized graphs
 }
 
 function createPlusSign(containerID) {
-  let plusLi = document.createElement("li");
-  let plusButton = document.createElement("div");
+  let plusLi = document.createElement("li"); // create a list element (as the other graphs)
+  let plusButton = document.createElement("div"); // create a div to put the + sign
   plusButton.className = "graphPreview addNewGraph";
-  plusLi.appendChild(plusButton);
-  document.querySelector("#"+containerID + " .graphs ul").appendChild(plusLi);
+  plusLi.appendChild(plusButton); // add the button to the list (as the other graphs)
+  document.querySelector("#"+containerID + " .graphs ul").appendChild(plusLi); // append the list element to the list
 
-  plusButton.addEventListener("click", addCustomGraph, false);
+  plusButton.addEventListener("click", addCustomGraph, false); // add action when the user clicks on the button
 }
 
 
@@ -282,7 +290,7 @@ function chooseFramerate(evt) {
   //let allGraphs = document.querySelectorAll("#" + this.parentNode.parentNode.parentNode.parentNode.id + " .graphPreview");
   /*let currentFile = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]];
   let datasetData = null;
-  
+
   if(wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]].split(".")[1]=="2d") {
 	   datasetData = getAllPlayersXYAllFrames(fileMap[currentFile]);
   }
@@ -293,7 +301,7 @@ function chooseFramerate(evt) {
   let datasetLength = datasetData.length;
 
   let frameRatio = Math.ceil(datasetLength/(5400*this.value));
-  
+
   console.log(frameRatio);
 
   if(frameRatio>1) {
@@ -313,19 +321,19 @@ function chooseFramerate(evt) {
     createPlusSign(this.parentNode.parentNode.parentNode.parentNode.id);
 
   }*/
-  
+
     setTimeframes(this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]);
 
 }
 
 function setTimeframes(tabNum) {
-	
+
 let sf = wsChosenStartFrame[tabNum];
 let ef = wsChosenEndFrame[tabNum];
 
   let currentFile = wsChosenDS[tabNum];
   let datasetData = null;
-  
+
   if(wsChosenDS[tabNum].split(".")[1]=="2d") {
 	   datasetData = getAllPlayersXYAllFrames(fileMap[currentFile]);
   }
@@ -336,13 +344,13 @@ let ef = wsChosenEndFrame[tabNum];
   let datasetLength = datasetData.length;
 
   let frameRatio = Math.ceil(datasetLength/(5400*wsChosenFramerate[tabNum]));
-  
+
   console.log(frameRatio);
 
   if(frameRatio>1) {
-   
+
 	allGraphs = document.querySelectorAll("#ctab" + tabNum + " .graphs ul li");
-	
+
 	console.log(allGraphs);
 	for(let liEl = 0; liEl < allGraphs.length; ++liEl) {
 		if(allGraphs[liEl].firstChild.id.includes("custom")) {
@@ -366,11 +374,11 @@ let ef = wsChosenEndFrame[tabNum];
 
   }
 }
-	
+
 
 
 function chooseSF(evt) {
-	
+
 	tabID = this.parentNode.parentNode.parentNode.parentNode.id;
   wsChosenStartFrame[tabID.split("ctab")[1]]=this.value;
   document.querySelector("#"+tabID+" .startFrame").value = this.value;
@@ -380,7 +388,7 @@ function chooseSF(evt) {
     document.querySelector("#"+tabID+" .endFrame").value = this.value;
     document.querySelector("#"+tabID+" .frameEndS").value = this.value;
   }
-  
+
   setTimeframes(tabID.split("ctab")[1]);
   try {
 	  // Graph with players
@@ -390,7 +398,7 @@ function chooseSF(evt) {
 	  plotNetwork(newGraphBoxNG.id, getAllPlayersXYAllFrames(fileMap[fileName]),this.value);
   }
   finally {
-	  
+
   }
 }
 
@@ -404,7 +412,7 @@ function chooseEF(evt) {
     document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .startFrame").value = this.value;
     document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .frameStartS").value = this.value;
   }
-  
+
     setTimeframes(this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]);
 
 }
