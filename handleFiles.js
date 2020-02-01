@@ -80,64 +80,7 @@ function isFileAlreadyImported(dsl, myFile) {
 }
 */
 
-function getNumberOfRecords(matchString) {
-    let matchArray = matchString.split("\n"); // each record is on a new line
-    return matchArray.length; // the length is the number of records
-}
 
-
-function getAllPlayersXYAllFrames(matchString) {
-  let matchArray = splitOnNewLine(matchString); // the array contains one line for each timestamp
-  let matchPosArray = [];
-
-  // Since the each string in the array can start with one or more spaces, it is necessary to uniform this notation
-  // In particular, the beginning of the string should be the only place where there is more than one space
-  // At the end of the procedure all the strings have to start with one space followed by a non-space char
-  // If there is not a space as first char, therefore it has to be inserted
-  // Then, if two or more spaces are found, they are replaced by a single space
-
-  for(let k=0; k<matchArray.length; ++k) {
-
-    if(matchArray[k][0]!=" ") { // if it dows not start with a space
-      matchArray[k] = " " + matchArray[k]; // add a space at the beginning
-    }
-
-    // Now when two spaces or more spaces are found, they are replaced by a single space => replace(/  +/g, ' ')
-    // Then the string is split into arrays when a space is found
-    matchPosArray.push(getAllPlayersXYFrame(matchArray[k].replace(/  +/g, ' ').split(" ")));
-  }
-  return matchPosArray;
-  // This array contains n arrays, where n is the number of timestamps
-  // Each sub-array contains several arrays, corresponding to the number of players + 1
-  // Ex. of a sub-array: <timestamp, player 1, player 2.... >
-}
-
-function getAllPlayersXYFrame(frameArray) {
-  let teamPosList = [];
-  teamPosList.push(getTeamPlayersXYFrame(frameArray, 1));
-  teamPosList.push(getTeamPlayersXYFrame(frameArray, 2));
-  return teamPosList;
-}
-
-function getTeamPlayersXYFrame(frameArray, team) {
-  let posList = [];
-  for(let j=1+14*(team-1); j<15+14*(team-1); ++j) {
-    posList.push(getNthPlayerXY(frameArray, j));
-  }
-  return posList;
-}
-
-function getNthPlayerXY(frameArray, num) {
-  return [getNthPlayerX(frameArray, num), getNthPlayerY(frameArray, num)];
-}
-
-function getNthPlayerX(frameArray, num) {
-  return frameArray[2*num];
-}
-
-function getNthPlayerY(frameArray, num) {
-  return frameArray[2*num+1];
-}
 
 // Social networks
 function parseSN(snText) {
@@ -190,10 +133,17 @@ function parseAnt(antText) {
 }
 
 function fromFrameToPosition(frameNr, playerNr, matchArray) {
+   try {
    let x = matchArray[frameNr][Math.floor(playerNr/15)][playerNr][0];
    let y = matchArray[frameNr][Math.floor(playerNr/15)][playerNr][1];
+   return [x, y];
 
-return [x, y];
+ }
+ catch(error) {
+   console.log(frameNr + " " + playerNr);
+   console.log(matchArray[frameNr]);
+ }
+
 }
 
 function calculateEccentricity(frameNr, playerNr, matchArray) {
