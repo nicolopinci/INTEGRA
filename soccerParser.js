@@ -1,5 +1,5 @@
 
-function getAllPlayersXYAllFrames(matchString) {
+function getAllPlayersXYAllFrames(matchString) { // generates a data structure for the whole soccer match
   let matchArray = splitOnNewLine(matchString); // the array contains one line for each timestamp
   let matchPosArray = [];
 
@@ -47,22 +47,27 @@ function getTeamPlayersXYFrame(frameArray, team) { // returns the list of the pl
   // and 2 because of the two coordinates)
 
   if(teamSize > 10) { // Removes lines without a readable content
-    for(let j=1+(teamSize-1)*(team-1); j<teamSize+(teamSize-1)*(team-1); ++j) {
-      posList.push(getNthPlayerXY(frameArray, j));
+    for(let j=1+(teamSize-1)*(team-1); j<teamSize+(teamSize-1)*(team-1); ++j) { // for every player in the team
+      posList.push(getNthPlayerXY(frameArray, j)); // put the coordinates of a player in the team array
     }
   }
   return posList;
 }
 
-
-function getNthPlayerXY(frameArray, num) {
+function getNthPlayerXY(frameArray, num) { // gets the position (x, y) of the n-th player
   return [getNthPlayerX(frameArray, num), getNthPlayerY(frameArray, num)];
 }
 
-function getNthPlayerX(frameArray, num) {
+function getNthPlayerX(frameArray, num) { // gets the n-th player x position
   return frameArray[2*num];
 }
 
-function getNthPlayerY(frameArray, num) {
+function getNthPlayerY(frameArray, num) { // gets the n-th player y position
   return frameArray[2*num+1];
+}
+
+function fromFrameToPosition(frameNr, playerNr, matchArray) {
+   let x = matchArray[frameNr][Math.floor(playerNr/15)][playerNr][0];
+   let y = matchArray[frameNr][Math.floor(playerNr/15)][playerNr][1];
+   return [x, y];
 }

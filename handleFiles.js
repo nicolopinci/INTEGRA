@@ -5,10 +5,8 @@ var wsChosenFramerate = [];
 var wsChosenStartFrame = [];
 var wsChosenEndFrame = [];
 
-
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
 document.getElementById('cfiles').addEventListener('change', importColors, false);
-
 
 function handleFileSelect(evt) {
   var files = evt.target.files; // FileList object
@@ -53,47 +51,6 @@ function isFileAlreadyImported(dsl, myFile) {
   return false;
 }
 
-// Soccer
-/*function setDataset(evt) {
-
-  getAllPlayersXYAllFrames(fileMap[this.value]);
-  numberOfRecords = getNumberOfRecords(fileMap[this.value]);
-
-  let tabID;
-  let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
-  for(let t=0; t<existingTabs.length; ++t) { // for each tab
-    if(existingTabs[t].style.display == 'inline-block') { // the workspace is visible
-      tabID = existingTabs[t].id; // remember the ID of that workspace
-    }
-  }
-
-  document.querySelector("#" + tabID + " .startFrame").max = numberOfRecords; // set the start frame indicator current value to last frame
-  document.querySelector("#" + tabID + " .endFrame").max = numberOfRecords; // set the end frame indicator to the last frame
-
-  document.querySelector("#" + tabID + " .startFrame").value = 0; // set the start frame indicator current value to 0
-  document.querySelector("#" + tabID + " .endFrame").value = numberOfRecords; // set the end frame current indicator to the last frame
-
-  document.querySelector("#" + tabID + " .frameStartS").value = 0; // set the numeric start frame indicator current value to 0
-  document.querySelector("#" + tabID + " .frameEndS").value = numberOfRecords; // set the numeric end frame current indicator to the last frame
-
-  return matchArray;
-}
-*/
-
-
-
-// Social networks
-function parseSN(snText) {
-  let timeArray = snText.split("\n");
-  let snMapArray = [];
-  for(let i=0; i<timeArray.length; ++i) {
-    let timestepData = timeArray[i].split(" ");
-    snMapArray.push({'A': timestepData[0], 'B': timestepData[1], 'ts': timestepData[2]});
-  }
-  //console.log(snMapArray);
-  return snMapArray;
-}
-
 // Bach chorales
 function parseBach(lispText) {
 
@@ -130,58 +87,4 @@ function parseAnt(antText) {
   }
 
   return actionsMap;
-}
-
-function fromFrameToPosition(frameNr, playerNr, matchArray) {
-   try {
-   let x = matchArray[frameNr][Math.floor(playerNr/15)][playerNr][0];
-   let y = matchArray[frameNr][Math.floor(playerNr/15)][playerNr][1];
-   return [x, y];
-
- }
- catch(error) {
-   console.log(frameNr + " " + playerNr);
-   console.log(matchArray[frameNr]);
- }
-
-}
-
-function calculateEccentricity(frameNr, playerNr, matchArray) {
-   referencePosition = fromFrameToPosition(frameNr, playerNr, matchArray);
-
-if(referencePosition[0]<150.0 && referencePosition[0]>0.0) {
-   distance = 0.0;
-   for(let i=0; i<12; ++i) {
-     if(fromFrameToPosition(frameNr, i, matchArray)[0]>0.0 && fromFrameToPosition(frameNr, i, matchArray)[0]<150.0) {
-       let tempDistance = Math.pow(Math.pow(fromFrameToPosition(frameNr, i, matchArray)[0]-referencePosition[0], 2)+Math.pow(fromFrameToPosition(frameNr, i, matchArray)[1]-referencePosition[1], 2),0.5);
-       if(tempDistance > distance) {
-         distance = tempDistance;
-       }
-     }
-   }
-   return distance;
-}
-else {
-  return undefined;
-}
-}
-
-function calculateGlobalEccentricity(playerNr, matchArray) {
-  let outArr = [];
-  for(let i=0; i<matchArray.length; ++i) {
-    outArr.push(calculateEccentricity(i, playerNr, matchArray));
-  }
-  return outArr;
-}
-
-function calculateGlobalEccAll(matchArray) {
-  let outArr = [];
-  let trArray = [];
-
-  for(let i=0; i<12; ++i) {
-    outArr.push(calculateGlobalEccentricity(i, matchArray));
-  }
-
-
-  return outArr;
 }

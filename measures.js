@@ -1,105 +1,43 @@
-  function calculateAmmortizedDegree(snMapArray, nodeID, k) {
-    let counter = [];
-    counter.push(0);
-    let initialTS = snMapArray[0]["ts"];
-    for(let i=1; i<snMapArray.length; ++i) {
-      counter.push(counter[i-1]*k);
-      if(snMapArray[i]["A"]===nodeID || snMapArray[i]["B"]===nodeID) {
-        counter[i] += 1;
-      }
-    }
-
-    return counter;
-
-  }
-
-  function getNodeIDs(snMapArray) {
+  // SOCIAL NETWORKS
+  // Utility to count the nodes
+  function getNodeIDs(snMapArray) { // returns the list of all the nodes
     let nodeArray = [];
     for(let i=0; i<snMapArray.length; ++i) {
-      nodeArray.push(snMapArray[i]["A"]);
-      nodeArray.push(snMapArray[i]["B"]);
+      nodeArray.push(snMapArray[i]["A"]); // origin node
+      nodeArray.push(snMapArray[i]["B"]); // destination node
     }
-    return nodeArray;
+    return nodeArray; // list with all the nodes
   }
 
-  function calcTotAmmDegree(snMapArray, k) {
+  // Ammortized degree
+  function calcTotAmmDegree(snMapArray, k) { // Ammortized degree for the whole dataset
     let nodeArr = getNodeIDs(snMapArray);
-
     let totMap = {};
 
-    for(let i=0; i<nodeArr.length/1000; ++i) {
+    for(let i=0; i<nodeArr.length; ++i) { // For all the nodes
       if(totMap[nodeArr[i]]===undefined) {
-        totMap[nodeArr[i]] = calculateAmmortizedDegree(snMapArray, nodeArr[i], k);
+        totMap[nodeArr[i]] = calculateAmmortizedDegree(snMapArray, nodeArr[i], k); // calculate the ammortized degree for that node
       }
     }
-
     return degreeMapToMatrix(totMap);
   }
 
-  function degreeMapToMatrix(totMap) {
-    let outMatrix = [];
 
-    for(key in totMap) {
-      outMatrix.push(totMap[key]);
-    }
-    return outMatrix;
-  }
-
-  /*function initiative(snMapArray) {
-    let nrSentMessages = [];
-    let nrReceivedMessages = [];
-    let nodeArr = getNodeIDs(snMapArray);
-
-
-    for(let i=0; i<snMapArray.length/1000; ++i) {
-      if(nrSentMessages[snMapArray[i]["ts"]]===undefined) {
-        nrSentMessages[snMapArray[i]["ts"]] = [];
-      }
-      else
-        {
-          nrSentMessages[snMapArray[i]["ts"]][snMapArray[i]["A"]] += 1;
-        }
-
-
-        if(nrReceivedMessages[snMapArray[i]["B"]]===undefined) {
-          nrReceivedMessages[snMapArray[i]["B"]] = [];
-        }
-        else
-          {
-            nrReceivedMessages[snMapArray[i]["B"]] += 1;
-          }
-      }
-
-  let initiativeRatio = [];
-    for(let j=0; j<nrSentMessages.length; ++j) {
-      initiativeRatio.push(nrSentMessages[j]/nrReceivedMessages[j]);
-    }
-    return initiativeRatio;
-  } */
-
-  function initiative(snMapArray, nodeID) {
-    let sentM = [];
-    sentM.push(0);
-    let recM = [];
-    recM.push(0);
-
+  function calculateAmmortizedDegree(snMapArray, nodeID, k) { // Ammortized degree for the node nodeID
+    let counter = [];
+    counter.push(0);
     for(let i=1; i<snMapArray.length; ++i) {
-      sentM.push(sentM[i-1]);
-      recM.push(recM[i-1]);
-
-      if(snMapArray[i]["A"]===nodeID) {
-        sentM[i] += 1;
-      }
-      if(snMapArray[i]["B"]===nodeID) {
-        recM[i] += 1;
+      counter.push(counter[i-1]*k);
+      if(snMapArray[i]["A"]===nodeID || snMapArray[i]["B"]===nodeID) { // one of the two nodes is nodeID
+        counter[i] += 1;
       }
     }
-
-    return [sentM, recM];
-
+    return counter;
   }
 
-  function calcTotInitiative(snMapArray) {
+
+  // Initiative
+  function calcTotInitiative(snMapArray) { // calculate the initiative for the whole dataset
     let nodeArr = getNodeIDs(snMapArray);
     let totMap = {};
 
@@ -115,16 +53,34 @@
         for(let k=0; k<snMapArray.length; ++k) {
           totMap[nodeArr[i]][k] = initiative(snMapArray, nodeArr[i])[0][k]/initiative(snMapArray, nodeArr[i])[1][k];
         }
-        //totMap[nodeArr[i]].push(initiative(snMapArray, nodeArr[i])[0]/initiative(snMapArray, nodeArr[i])[1]);
       }
-      /*else {
-        totMap[nodeArr[i]].push(calculateAmmortizedDegree(snMapArray, nodeArr[i]));
-      }*/
     }
-    //console.log(degreeMapToMatrix(totMap));
     return degreeMapToMatrix(totMap);
   }
 
+  function initiative(snMapArray, nodeID) { // initiative for a single node
+    let sentM = []; // sent messages list
+    sentM.push(0);
+    let recM = []; // received messages list
+    recM.push(0);
+
+    for(let i=1; i<snMapArray.length; ++i) {
+      sentM.push(sentM[i-1]);
+      recM.push(recM[i-1]);
+
+      if(snMapArray[i]["A"]===nodeID) {
+        sentM[i] += 1;
+      }
+
+      if(snMapArray[i]["B"]===nodeID) {
+        recM[i] += 1;
+      }
+    }
+    return [sentM, recM];
+  }
+
+
+// Activity peaks
 function calculateActivityPeaks(inMatrix) {
   let outMatrix = [];
   for(let i=0; i<inMatrix.length; ++i) {
@@ -145,6 +101,17 @@ function calculateActivityPeaks(inMatrix) {
   }
   return outMatrix;
 }
+
+
+function degreeMapToMatrix(totMap) {
+  let outMatrix = [];
+
+  for(key in totMap) {
+    outMatrix.push(totMap[key]);
+  }
+  return outMatrix;
+}
+
 
 function groupMatrix(inMatrix, red) {
   let outMatrix = [];
@@ -250,4 +217,44 @@ function calculateLocalClusteringThroughTime(snMapArray) {
     lct.push(calculateLocalClustering(partialMap));
   }
   return lct;
+}
+
+function calculateEccentricity(frameNr, playerNr, matchArray) {
+   referencePosition = fromFrameToPosition(frameNr, playerNr, matchArray);
+
+if(referencePosition[0]<150.0 && referencePosition[0]>0.0) {
+   distance = 0.0;
+   for(let i=0; i<12; ++i) {
+     if(fromFrameToPosition(frameNr, i, matchArray)[0]>0.0 && fromFrameToPosition(frameNr, i, matchArray)[0]<150.0) {
+       let tempDistance = Math.pow(Math.pow(fromFrameToPosition(frameNr, i, matchArray)[0]-referencePosition[0], 2)+Math.pow(fromFrameToPosition(frameNr, i, matchArray)[1]-referencePosition[1], 2),0.5);
+       if(tempDistance > distance) {
+         distance = tempDistance;
+       }
+     }
+   }
+   return distance;
+}
+else {
+  return undefined;
+}
+}
+
+function calculateGlobalEccentricity(playerNr, matchArray) {
+  let outArr = [];
+  for(let i=0; i<matchArray.length; ++i) {
+    outArr.push(calculateEccentricity(i, playerNr, matchArray));
+  }
+  return outArr;
+}
+
+function calculateGlobalEccAll(matchArray) {
+  let outArr = [];
+  let trArray = [];
+
+  for(let i=0; i<12; ++i) {
+    outArr.push(calculateGlobalEccentricity(i, matchArray));
+  }
+
+
+  return outArr;
 }
