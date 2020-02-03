@@ -1,3 +1,95 @@
+function addCustomGraph(evt) {
+  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .modal").style.display = "inline-block";
+  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .close").addEventListener("click", closeModal, false);
+  //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .addV").addEventListener("click", addVariable, false);
+  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotHeat").addEventListener("click", plotNewCustomHeat, false);
+  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotScatter2d").addEventListener("click", plotNewCustomScatter2D, false);
+  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotScatter3d").addEventListener("click", plotNewCustomScatter3D, false);
+
+
+
+}
+
+function drawPresetGraphs(graphType, parsedData, containerID) {
+  switch(graphType) {
+    case "2d":
+
+      /* 4 var graphs
+      let newGraphBoxEcc = createNewGraphBox("2d", containerID, "ECC");
+      plotCustomHeat([[[1, 2]], [[1, 2]]], newGraphBoxEcc.id);
+      */
+
+      // Graph with players
+    let newGraphBoxNG = createNewGraphBox("2d", containerID, "NG");
+      newGraphBoxNG.style.height = "430px";
+      newGraphBoxNG.style.width = "690px";
+      newGraphBoxNG.style.padding = "4px";
+      plotNetwork(newGraphBoxNG.id, parsedData,0);
+
+	  // Graph with players (animated)
+    let newGraphBoxNGA = createNewGraphBox("2d", containerID, "NGA");
+      newGraphBoxNGA.style.height = "430px";
+      newGraphBoxNGA.style.width = "690px";
+      newGraphBoxNGA.style.padding = "4px";
+      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, 100);
+
+      // Eccentricity GVR
+      let newGraphBoxEcc = createNewGraphBox("2d", containerID, "ECC");
+      plotHeat(calculateGlobalEccAll(parsedData),'heatmap', newGraphBoxEcc.id, "Eccentricity GVR", "Time", "Player");
+
+      // Eccentricity Sorted GVR
+      let newGraphBoxEccS = createNewGraphBox("2d", containerID, "ECCS");
+      plotHeat(sortEccAll(calculateGlobalEccAll(parsedData)),"heatmap", newGraphBoxEccS.id, "Eccentricity GVR (Sorted)", "Time", "Player");
+
+      // Average Eccentricity GVR
+      let newGraphBoxAEcc = createNewGraphBox("2d", containerID, "AECC");
+      plotHeat(arrayAverage(calculateGlobalEccAll(parsedData)),'heatmap', newGraphBoxAEcc.id, "Average Eccentricity GVR", "Player", "");
+
+      // Normal heat map
+      let newGraphBoxNH = createNewGraphBox("2d", containerID, "NH");
+      plotHeat(computeHeatMatrix(parsedData, 101, 61),'heatmap', newGraphBoxNH.id, "Heat map", "Width", "Length");
+
+      // Radix heat map
+      let newGraphBoxRH = createNewGraphBox("2d", containerID, "RH");
+      plotHeat(computeRadixHeat(computeHeatMatrix(parsedData, 101, 61)),'heatmap', newGraphBoxRH.id, "Radix heat map", "Width", "Length");
+
+      // Averaged radix heat map
+      let newGraphBoxARH = createNewGraphBox("2d", containerID, "ARH");
+      plotHeat(computeRadixHeat(computeAverageHeatMatrix(parsedData, 101, 61)),'heatmap', newGraphBoxARH.id, "Averaged radix heat map", "Width");
+
+      // Radix 3D heat map
+      let newGraphBox3RH = createNewGraphBox("2d", containerID, "3RH");
+      plotHeat(computeRadixHeat(computeHeatMatrix(parsedData, 101, 61)),'surface', newGraphBox3RH.id, "Radix tridimensional heat map", "Width", "Length");
+
+    break;
+
+    case "sn":
+      let newGraphBoxSN = createNewGraphBox("sn", containerID, "SN");
+      plotScatter(parsedData,'scatter3d', newGraphBoxSN.id, "Tridimensional relational point graph", "Width", "Length");
+
+      let newGraphBoxSNAD1 = createNewGraphBox("sn", containerID, "SNAD");
+      plotHeat(calcTotAmmDegree(parsedData, 1),'heatmap', newGraphBoxSNAD1.id, "Amortized degree GVR (k=1)", "Timestamp", "User");
+
+      let newGraphBoxSNADPEAKS1 = createNewGraphBox("sn", containerID, "SNADPEAKS");
+      plotHeat(groupMatrix(calculateActivityPeaks((calcTotAmmDegree(parsedData, 1))), 1000),'heatmap', newGraphBoxSNADPEAKS1.id, "Grouped activity peaks GVR (r=1000)", "Block", "User");
+
+      let newGraphBoxSNAD0995 = createNewGraphBox("sn", containerID, "SNAD0995");
+      plotHeat(calcTotAmmDegree(parsedData, 0.995),'heatmap', newGraphBoxSNAD0995.id, "Amortized degree GVR (k=0.995)", "Timestamp", "User");
+
+      let newGraphBoxSNAD09995 = createNewGraphBox("sn", containerID, "SNAD09995");
+      plotHeat(calcTotAmmDegree(parsedData, 0.9995),'heatmap', newGraphBoxSNAD09995.id, "Amortized degree GVR (k=0.9995)", "Timestamp", "User");
+
+      let newGraphBoxInitiative = createNewGraphBox("sn", containerID, "SNINI");
+      plotHeat(calcTotInitiative(parsedData),'heatmap', newGraphBoxInitiative.id, "Initiative GVR", "Timestamp", "User");
+
+      let newGraphBoxLocClust = createNewGraphBox("sn", containerID, "SNLC");
+      plotHeat(calculateLocalClusteringThroughTime(parsedData),'heatmap', newGraphBoxLocClust.id, "Local Clustering GVR", "User", "Timestamp");
+
+    break;
+  }
+
+}
+
 function plotData(xdata, ydata, typedata, elementID, myTitle, xaxis, yaxis) {
 
   let data = [
@@ -103,12 +195,12 @@ return layout;
 
 
 function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame) {
-	
+
 var allImages = [];
 
 for(let i=startFrame; i<endFrame; ++i) {
-	var c = computeNetwork(elementID, dataset, i);	
-	
+	var c = computeNetwork(elementID, dataset, i);
+
 	allImages.push(Canvas2Image.convertToPNG(c, 1000, 1000));
 }
 
@@ -137,8 +229,8 @@ function computeNetwork(elementID, dataSet,frame){
    teamOne.push([dataSet[frame][0][i][0],dataSet[frame][0][i][1]])
    teamTwo.push([dataSet[frame][1][i][0],dataSet[frame][1][i][1]])
  }
- 
- 
+
+
  var delaunay1 = new Delaunay(teamOne);
  var delaunay2 = new Delaunay(teamTwo);
  var triangles1 = delaunay1.triangulate();
@@ -295,7 +387,7 @@ pitch.draw();
    ctx.closePath();
    ctx.stroke();
  }
- 
+
  for(x = 0; x < teamOne.length; ++x) {
 	  ctx.beginPath();
  ctx.arc(teamOne[x][0]*f, teamOne[x][1]*f, 10, 0, 2 * Math.PI, false);
@@ -304,13 +396,13 @@ pitch.draw();
       ctx.lineWidth = 1;
       ctx.strokeStyle = 'blue';
       ctx.stroke();
-	 
+
 
  }
- 
+
   for(x = 0; x < teamOne.length; ++x) {
 	  ctx.beginPath();
- 
+
       ctx.fillStyle = 'black';
 
 	ctx.font = "10px Arial";
@@ -318,7 +410,7 @@ pitch.draw();
 	  ctx.stroke();
 
  }
- 
+
   for(x = 0; x < teamTwo.length; ++x) {
 	  ctx.beginPath();
  ctx.arc(teamTwo[x][0]*f, teamTwo[x][1]*f, 10, 0, 2 * Math.PI, false);
@@ -327,10 +419,10 @@ pitch.draw();
       ctx.lineWidth = 1;
       ctx.strokeStyle = 'red';
       ctx.stroke();
-	 
+
 
  }
- 
+
   for(x = 0; x < teamTwo.length; ++x) {
 	  ctx.beginPath();
       ctx.fillStyle = 'black';
@@ -340,10 +432,10 @@ pitch.draw();
 	  ctx.stroke();
 
  }
- 
+
 return canvas;
 
-} 
+}
 
 
 function plotCustomScatter(inData, elementID, type) {
@@ -419,4 +511,99 @@ function plotCustomHeat(inData, elementID) {
   }
 
 
+}
+
+
+function plotNewCustomHeat(evt) {
+  //console.log(this.parentNode.parentNode.parentNode.parentNode.id);
+  let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
+  let inData = [];
+  if(fileName.split(".")[1]==="2d") {
+
+    inData = getAllPlayersXYAllFrames(fileMap[fileName]);
+}
+else if(fileName.split(".")[1]==="sn"){
+  inData = parseSN(fileMap[fileName]);
+}
+  //let inData = [[[1, 2]], [[1, 2]]];
+  eval("function defineCustomCode(inData) {" + this.parentNode.parentNode.children[1].children[2].value+" return outData;}");
+  let graphData = defineCustomCode(inData);
+
+  let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
+  // 4 var graphs
+  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, "custom"+countGraphs);
+  plotCustomHeat(graphData, newCustomGraphBox.id);
+
+  //let varMap = getVariableArrayLisp(getVariableNamesLisp(fileMap["chorales.lisp"]), parseBach(fileMap["chorales.lisp"]));
+
+  //let varMap = {"ds": getAllPlayersXYAllFrames(fileMap["CapBotT1Suav.2d"])};
+  //let varMap = {"ds": [[[1, 2, 3], [1, 4, 5]], [[1, 7, 9], [2, 5, 6]]]};
+
+  /*let outMap = {};
+
+  let wsID = this.parentNode.parentNode.parentNode.parentNode.id;
+
+console.log(nerdamer(document.querySelector("#"+wsID + " #varx").value, varMap).evaluate().toString());
+      outMap["x"] = nerdamer(document.querySelector("#"+wsID + " #varx").value, varMap).evaluate().toString();
+      outMap["y"] = nerdamer(document.querySelector("#"+wsID + " #vary").value, varMap).evaluate().toString();
+      outMap["z"] = nerdamer(document.querySelector("#"+wsID + " #varz").value, varMap).evaluate().toString();
+      outMap["color"] = nerdamer(document.querySelector("#"+wsID + " #varcolor").value, varMap).evaluate().toString();
+      outMap["animation"] = nerdamer(document.querySelector("#"+wsID + " #varanimation").value, varMap).evaluate().toString();
+
+console.log(outMap);
+
+  try {
+    let containerID = this.parentNode.parentNode.parentNode.parentNode.id;
+
+    let newGraphBox = createNewGraphBox("lisp", containerID, "_"+this.parentNode.parentNode.parentNode.parentNode.children[2].children[0].childElementCount);
+    plotData(outMap["x"].split("[")[1].split("]")[0].split(","), outMap["y"].split("[")[1].split("]")[0].split(","), 'scatter', newGraphBox.id, "Title", "x", "y");
+  }
+  catch(Exception){
+    alert("Error");
+  }*/
+
+
+}
+
+
+function plotNewCustomScatter2D(evt) {
+  let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
+  let inData = [];
+  if(fileName.split(".")[1]==="2d") {
+
+    inData = getAllPlayersXYAllFrames(fileMap[fileName]);
+}
+else if(fileName.split(".")[1]==="sn"){
+  inData = parseSN(fileMap[fileName]);
+}
+
+  eval("function defineCustomCode(inData) {" + this.parentNode.parentNode.children[1].children[2].value+" return outData;}");
+  let graphData = defineCustomCode(inData);
+
+  let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
+
+  // 4 var graphs
+  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, "customScatter"+countGraphs);
+  plotCustomScatter(graphData, newCustomGraphBox.id, 'scatter');
+}
+
+function plotNewCustomScatter3D(evt) {
+  let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
+  let inData = [];
+  if(fileName.split(".")[1]==="2d") {
+
+    inData = getAllPlayersXYAllFrames(fileMap[fileName]);
+}
+else if(fileName.split(".")[1]==="sn"){
+  inData = parseSN(fileMap[fileName]);
+}
+
+  eval("function defineCustomCode(inData) {" + this.parentNode.parentNode.children[1].children[2].value+" return outData;}");
+  let graphData = defineCustomCode(inData);
+
+  let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
+
+  // 4 var graphs
+  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, "customScatter"+countGraphs);
+  plotCustomScatter(graphData, newCustomGraphBox.id, 'scatter3d');
 }
