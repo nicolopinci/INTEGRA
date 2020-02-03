@@ -275,7 +275,6 @@ function calculateGlobalEccAll(matchArray) {
     outArr.push(calculateGlobalEccentricity(i, matchArray));
   }
 
-
   return outArr;
 }
 

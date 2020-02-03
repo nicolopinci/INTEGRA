@@ -527,12 +527,15 @@ else if(fileName.split(".")[1]==="sn"){
 }
   //let inData = [[[1, 2]], [[1, 2]]];
   eval("function defineCustomCode(inData) {" + this.parentNode.parentNode.children[1].children[2].value+" return outData;}");
+
   let graphData = defineCustomCode(inData);
 
   let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
   // 4 var graphs
   let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, "custom"+countGraphs);
   plotCustomHeat(graphData, newCustomGraphBox.id);
+  //plotHeat(graphData, 'heatmap', newCustomGraphBox.id, 'Custom GVR', 'Custom x', 'Custom y');
+
 
   //let varMap = getVariableArrayLisp(getVariableNamesLisp(fileMap["chorales.lisp"]), parseBach(fileMap["chorales.lisp"]));
 
