@@ -51,31 +51,6 @@ function isFileAlreadyImported(dsl, myFile) {
   return false;
 }
 
-// Bach chorales
-function parseBach(lispText) {
-
-    return JSON.parse(fileMap["chorales.lisp"].replace(/\) \(/g, ")(").replace(/ /g,": ").replace(/\(\(/g, "{").replace(/\)\(/g,", ").replace(/\)\)/g, "}, ").replace(/\(/g, "{").replace(/, \)/g, "}").replace(/: /g, "\": ").replace(/, {/g,",{").replace(/, /g, ", \"").replace(/{/g, "{\"").replace(/: {/g, ": [{").replace(/}}/g,"}]},").replace(/(\r\n|\n|\r)/gm,"").replace(/]},{/g, "],").replace(/}]},/g, "}]}"));
-
-}
-
-function getParsedChorale(lispText, num) {
-  return parseBach(lispText)[num];
-}
-
-function getVariableOfChorale(lispText, num, varName) {
-  let variab=[];
-
-
-  let pc = getParsedChorale(lispText, num);
-
-
-
-  for(let k=0; k<pc.length; ++k) {
-    variab.push(pc[k][varName]);
-  }
-
-  return variab;
-}
 
 function parseAnt(antText) {
   let actionsArray = antText.split("\n");
