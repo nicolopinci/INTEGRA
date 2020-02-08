@@ -28,7 +28,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	cursor: move;
-	background: #40c;
+	background: black;
 }
 .dialog .content {
 	position: absolute;
@@ -58,7 +58,7 @@
 .dialog button {
 	-webkit-transition: 0.25s;
 	transition: 0.25s;
-	color: #fff;
+	color: red;
 }
 .dialog button::-moz-focus-inner {
 	border: 0;
@@ -69,7 +69,7 @@
 {
 	cursor: pointer;
 }
-.dialog>button {
+.dialog .close{
 	width: 32px; /* change NOT allowed */
 	height: 32px; /* same as .dialog .titlebar height */
 	position: absolute;
@@ -78,16 +78,36 @@
 	padding: 0;
 	border: 0;
 	font-size: 1.4em;
-	background: #fa0;
+	background: red;
 }
+
+.dialog .minimize{
+	width: 32px; /* change NOT allowed */
+	height: 32px; /* same as .dialog .titlebar height */
+	position: absolute;
+	top: 0;
+	right: 32px;
+	padding: 0;
+	border: 0;
+	font-size: 1.4em;
+	background: yellow;
+}
+
 /* .dialog>button.hover, */
-.dialog>button:hover,
-.dialog>button.focus
+.dialog>.close:hover,
+.dialog>.close.focus
 {
-	box-shadow: inset -16px 0 0 0 #e80, inset 16px 0 0 0 #e80;
+	box-shadow: inset -16px 0 0 0 #89220b, inset 16px 0 0 0 #89220b;
 }
-.dialog>button.active {
-	background: #f55; /* irrelevant */
+
+.dialog>.minimize:hover,
+.dialog>.minimize.focus
+{
+	box-shadow: inset -16px 0 0 0 #ded115, inset 16px 0 0 0 #ded115;
+}
+
+.dialog .close.active {
+	background: red; /* irrelevant */
 	border: 1px solid #ddd; /* irrelevant */
 }
 .dialog .buttonset button {
@@ -98,7 +118,7 @@
 	border: 2px solid #fff; /* change allowed */
 	border-radius: 4px; /* change allowed */
 	margin-left: 16px; /* change NOT allowed */
-	background: #39c
+	background: red
 }
 .dialog .buttonset button:first-child {
 	margin-left: 0;
@@ -110,6 +130,6 @@
 	box-shadow: inset -32px 0 0 0 #17a, inset 32px 0 0 0 #17a;
 }
 .dialog .buttonset button.active {
-	background: #1a7;
+	background: red;
 	border-color: #ddd;
 }

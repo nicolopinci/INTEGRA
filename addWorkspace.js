@@ -29,18 +29,31 @@ function createContainerElement() {
   body = document.getElementsByTagName("body")[0];
 
   let dialogDiv = document.createElement("div");
-  dialogDiv.style = "min-width:400px; min-height:280px;";
+  dialogDiv.style = "width:40vw; height:40vh;";
+  dialogDiv.style.boxShadow = "0px 0px 10px grey";
   dialogDiv.id = "dialog"+(document.getElementsByClassName("tabsGroup")[0].children[0].childElementCount-1);
   dialogDiv.className = "dialog";
+  
+  /*let titleContainer = document.createElement("div");
+  titleContainer.style.position = "fixed";
+  titleContainer.name = "titleCont";*/
   
   let dialogTitlebar = document.createElement("div");
   dialogTitlebar.className = "titlebar";
   
   let closeButton = document.createElement("button");
+  closeButton.className = "close";
   closeButton.name = "close";
+  
+  let minimizeButton = document.createElement("button");
+  minimizeButton.className = "minimize";
+  minimizeButton.name = "minimize";
   
   dialogDiv.appendChild(dialogTitlebar);
   dialogDiv.appendChild(closeButton);
+  dialogDiv.appendChild(minimizeButton);
+  
+  // dialogDiv.appendChild(titleContainer);
   
   let container0 = document.getElementById("container");
 
@@ -56,10 +69,34 @@ function createContainerElement() {
   
   dragElement(dialogDiv);
   dialogDiv.addEventListener("click", activateFocus);
+  closeButton.addEventListener("click", closeWindow);
+  minimizeButton.addEventListener("click", minimizeWindow);
   //dialogDiv.addEventListener("drag", activateFocus);
     
 	return newContainer;
 }
+
+function closeWindow() {
+  this.parentNode.remove();
+}
+
+function minimizeWindow() {
+  let dialogBox = this.parentNode;
+  if(dialogBox.style.resize === "none") {
+    dialogBox.style.height = "40vh";
+    dialogBox.style.width = "40vw";
+    dialogBox.style.overflow = "scroll";
+    dialogBox.style.resize = "both";
+  }
+  else {
+    dialogBox.style.height = "32px";
+    dialogBox.style.width = "256px";
+    dialogBox.style.overflow = "hidden";
+    dialogBox.style.resize = "none";
+  }
+}
+
+
 
 function activateFocus() {
   let zIndexMax = 0;
@@ -507,7 +544,7 @@ function chooseDataset(evt) { // When a dataset is selected from the datasets li
   let tabID;
   let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
   for(let t=0; t<existingTabs.length; ++t) { // for each tab
-    if(this.closest("#"+existingTabs[t].id)!=null) { // the workspace is visible
+    if(this.closest("#"+existingTabs[t].id)!=null) { // the workspace is the one of interest
       tabID = existingTabs[t].id; // remember the ID of that workspace
     }
   }
@@ -522,9 +559,11 @@ function chooseDataset(evt) { // When a dataset is selected from the datasets li
   switch(fileExtension) {
     case "2d": // soccer match
       drawPresetGraphs("2d", getAllPlayersXYAllFrames(datasetContent), tabID); // draws the default graphs related to the soccer match
+      document.querySelector("#"+document.getElementById(tabID).parentNode.id+" .titlebar").innerHTML = "[Soccer] " + fileName;
       break;
     case "sn": // social network
       drawPresetGraphs("sn", parseSN(datasetContent), tabID); // draws the default graphs related to the social network analysis
+      document.querySelector("#"+document.getElementById(tabID).parentNode.id+" .titlebar").innerHTML = "[Social network] " + fileName;
       break;
     }
 
