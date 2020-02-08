@@ -69,7 +69,8 @@
 {
 	cursor: pointer;
 }
-.dialog .close{
+
+.titlebar ~ .close{
 	width: 32px; /* change NOT allowed */
 	height: 32px; /* same as .dialog .titlebar height */
 	position: absolute;
@@ -78,10 +79,10 @@
 	padding: 0;
 	border: 0;
 	font-size: 1.4em;
-	background: red;
+	background: black;
 }
 
-.dialog .minimize{
+.titlebar ~ .minimize{
 	width: 32px; /* change NOT allowed */
 	height: 32px; /* same as .dialog .titlebar height */
 	position: absolute;
@@ -90,10 +91,10 @@
 	padding: 0;
 	border: 0;
 	font-size: 1.4em;
-	background: yellow;
+	background: black;
 }
 
-.dialog .hideLeft{
+.titlebar ~ .hideLeft{
 	width: 32px; /* change NOT allowed */
 	height: 32px; /* same as .dialog .titlebar height */
 	position: absolute;
@@ -102,7 +103,7 @@
 	padding: 0;
 	border: 0;
 	font-size: 1.4em;
-	background: #1ac10c;
+	background: black;
 }
 
 /* .dialog>button.hover, */

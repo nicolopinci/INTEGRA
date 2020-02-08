@@ -44,14 +44,14 @@ function createContainerElement() {
   let closeButton = document.createElement("button");
   closeButton.className = "close";
   closeButton.name = "close";
-     closeButton.innerHTML = "X";
+     closeButton.innerHTML = "×";
   closeButton.style.color = "white";
   
   let minimizeButton = document.createElement("button");
   minimizeButton.className = "minimize";
   minimizeButton.name = "minimize";
     minimizeButton.innerHTML = "_";
-  minimizeButton.style.color = "black";
+  minimizeButton.style.color = "white";
   
    let hideLeft = document.createElement("button");
   hideLeft.className = "hideLeft";
