@@ -306,11 +306,11 @@ function handleWorkspaceStatus(newContainer) {
   document.querySelectorAll("#" + newContainer.id + " .framerate")[0].addEventListener("change", chooseFramerate, false);
 
   wsChosenStartFrame.push("");
-  document.querySelectorAll("#" + newContainer.id + " .startFrame")[0].addEventListener("change", chooseSF, false);
+  //document.querySelectorAll("#" + newContainer.id + " .startFrame")[0].addEventListener("change", chooseSF, false);
   document.querySelectorAll("#" + newContainer.id + " .frameStartS")[0].addEventListener("change", chooseSF, false);
 
   wsChosenEndFrame.push("");
-  document.querySelectorAll("#" + newContainer.id + " .endFrame")[0].addEventListener("change", chooseEF, false);
+  //document.querySelectorAll("#" + newContainer.id + " .endFrame")[0].addEventListener("change", chooseEF, false);
   document.querySelectorAll("#" + newContainer.id + " .frameEndS")[0].addEventListener("change", chooseEF, false);
 }
 
@@ -389,7 +389,7 @@ function openWorkspace(evt) {
 
 // Parameters
 function chooseFramerate(evt) {
-	console.log("Framerate chosen");
+	//console.log("Framerate chosen");
   wsChosenFramerate[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]]=this.value;
   //let allGraphs = document.querySelectorAll("#" + this.parentNode.parentNode.parentNode.parentNode.id + " .graphPreview");
   /*let currentFile = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]];
@@ -455,7 +455,7 @@ let ef = wsChosenEndFrame[tabNum];
 
 	allGraphs = document.querySelectorAll("#ctab" + tabNum + " .graphs ul li");
 
-	console.log(allGraphs);
+	//console.log(allGraphs);
 	for(let liEl = 0; liEl < allGraphs.length; ++liEl) {
 		if(allGraphs[liEl].firstChild.id.includes("custom")) {
 		}
@@ -481,22 +481,30 @@ let ef = wsChosenEndFrame[tabNum];
 
 function chooseSF(evt) {
 
-	tabID = this.parentNode.parentNode.parentNode.parentNode.id;
+let tabID;
+  let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
+  for(let t=0; t<existingTabs.length; ++t) { // for each tab
+    if(this.closest("#"+existingTabs[t].id)!=null) { // the workspace is the one of interest
+      tabID = existingTabs[t].id; // remember the ID of that workspace
+    }
+  }
+
+  let fileName = document.querySelector("#" + tabID + " .datasetList").value; // get the name of the imported dataset
+
   wsChosenStartFrame[tabID.split("ctab")[1]]=this.value;
-  document.querySelector("#"+tabID+" .startFrame").value = this.value;
-  document.querySelector("#"+tabID+" .frameStartS").value = this.value;
+  //document.querySelector("#"+tabID+" .startFrame").value = this.value;
+  //document.querySelector("#"+tabID+" .frameStartS").value = this.value;
   if(this.value>wsChosenEndFrame[tabID.split("ctab")[1]]) {
     wsChosenEndFrame[tabID.split("ctab")[1]]=this.value;
-    document.querySelector("#"+tabID+" .endFrame").value = this.value;
-    document.querySelector("#"+tabID+" .frameEndS").value = this.value;
+    //document.querySelector("#"+tabID+" .endFrame").value = this.value;
+    //document.querySelector("#"+tabID+" .frameEndS").value = this.value;
   }
 
   setTimeframes(tabID.split("ctab")[1]);
   try {
 	  // Graph with players
-	  let newGraphBoxNG = document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+"g2d_NG");
+	  let newGraphBoxNG = document.querySelector("#"+tabID+"g2d_NG");
 	  newGraphBoxNG.innerHTML = "";
-	  let fileName = document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id + " .datasetList").value;
 	  plotNetwork(newGraphBoxNG.id, getAllPlayersXYAllFrames(fileMap[fileName]),this.value);
   }
   finally {
@@ -505,17 +513,29 @@ function chooseSF(evt) {
 }
 
 function chooseEF(evt) {
-  wsChosenEndFrame[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]]=this.value;
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .endFrame").value = this.value;
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .frameEndS").value = this.value;
 
-  if(this.value<wsChosenStartFrame[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]]) {
-    wsChosenStartFrame[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]]=this.value;
-    document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .startFrame").value = this.value;
-    document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .frameStartS").value = this.value;
+let tabID;
+  let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
+  for(let t=0; t<existingTabs.length; ++t) { // for each tab
+    if(this.closest("#"+existingTabs[t].id)!=null) { // the workspace is the one of interest
+      tabID = existingTabs[t].id; // remember the ID of that workspace
+    }
   }
 
-    setTimeframes(this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]);
+  let fileName = document.querySelector("#" + tabID + " .datasetList").value; // get the name of the imported dataset
+  
+  
+  wsChosenEndFrame[tabID.split("ctab")[1]]=this.value;
+  //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .endFrame").value = this.value;
+  //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .frameEndS").value = this.value;
+
+  if(this.value<wsChosenStartFrame[tabID.split("ctab")[1]]) {
+    wsChosenStartFrame[tabID.split("ctab")[1]]=this.value;
+    //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .startFrame").value = this.value;
+    //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .frameStartS").value = this.value;
+  }
+
+    setTimeframes(tabID.split("ctab")[1]);
 
 }
 

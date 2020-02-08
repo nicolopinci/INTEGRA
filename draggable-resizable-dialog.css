@@ -8,13 +8,13 @@
 */
 
 .dialog {
-	display: none; /* not visible by default */
+	//display: none; /* not visible by default */
 	font-family: Verdana, sans-serif;
 	font-size: 12px;
 	font-weight: 400;
-	color: #fff;
+	//color: #fff;
 	background: #666;
-	border: 1px solid #fff;  /* change allowed; Border to separate multipe dialog boxes */
+	//border: 1px solid #fff;  /* change allowed; Border to separate multipe dialog boxes */
 	margin: 0;
 	position: absolute;
 }
