@@ -29,6 +29,7 @@
 	text-overflow: ellipsis;
 	cursor: move;
 	background: black;
+	color: white;
 }
 .dialog .content {
 	position: absolute;

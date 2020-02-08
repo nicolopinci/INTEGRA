@@ -27,11 +27,11 @@ function drawPresetGraphs(graphType, parsedData, containerID) {
       plotNetwork(newGraphBoxNG.id, parsedData,0);
 
 	  // Graph with players (animated)
-    let newGraphBoxNGA = createNewGraphBox("2d", containerID, "NGA");
+ /*   let newGraphBoxNGA = createNewGraphBox("2d", containerID, "NGA");
       newGraphBoxNGA.style.height = "430px";
       newGraphBoxNGA.style.width = "690px";
       newGraphBoxNGA.style.padding = "4px";
-      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, 100);
+      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, 100); */
 
       // Eccentricity GVR
       let newGraphBoxEcc = createNewGraphBox("2d", containerID, "ECC");
