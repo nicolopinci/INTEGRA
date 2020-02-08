@@ -58,7 +58,7 @@
 .dialog button {
 	-webkit-transition: 0.25s;
 	transition: 0.25s;
-	color: red;
+	color: white;
 }
 .dialog button::-moz-focus-inner {
 	border: 0;
@@ -93,6 +93,18 @@
 	background: yellow;
 }
 
+.dialog .hideLeft{
+	width: 32px; /* change NOT allowed */
+	height: 32px; /* same as .dialog .titlebar height */
+	position: absolute;
+	top: 0;
+	right: 64px;
+	padding: 0;
+	border: 0;
+	font-size: 1.4em;
+	background: #1ac10c;
+}
+
 /* .dialog>button.hover, */
 .dialog>.close:hover,
 .dialog>.close.focus
@@ -104,6 +116,12 @@
 .dialog>.minimize.focus
 {
 	box-shadow: inset -16px 0 0 0 #ded115, inset 16px 0 0 0 #ded115;
+}
+
+.dialog>.hideLeft:hover,
+.dialog>.hideLeft.focus
+{
+	box-shadow: inset -16px 0 0 0 #09931c, inset 16px 0 0 0 #09931c;
 }
 
 .dialog .close.active {

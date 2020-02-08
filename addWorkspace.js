@@ -44,14 +44,25 @@ function createContainerElement() {
   let closeButton = document.createElement("button");
   closeButton.className = "close";
   closeButton.name = "close";
+     closeButton.innerHTML = "X";
+  closeButton.style.color = "white";
   
   let minimizeButton = document.createElement("button");
   minimizeButton.className = "minimize";
   minimizeButton.name = "minimize";
+    minimizeButton.innerHTML = "_";
+  minimizeButton.style.color = "black";
+  
+   let hideLeft = document.createElement("button");
+  hideLeft.className = "hideLeft";
+  hideLeft.name = "hideLeft";
+  hideLeft.innerHTML = "<";
+  hideLeft.style.color = "white";
   
   dialogDiv.appendChild(dialogTitlebar);
   dialogDiv.appendChild(closeButton);
   dialogDiv.appendChild(minimizeButton);
+    dialogDiv.appendChild(hideLeft);
   
   // dialogDiv.appendChild(titleContainer);
   
@@ -71,6 +82,7 @@ function createContainerElement() {
   dialogDiv.addEventListener("click", activateFocus);
   closeButton.addEventListener("click", closeWindow);
   minimizeButton.addEventListener("click", minimizeWindow);
+    hideLeft.addEventListener("click", hideLeftMenu);
   //dialogDiv.addEventListener("drag", activateFocus);
     
 	return newContainer;
@@ -93,6 +105,20 @@ function minimizeWindow() {
     dialogBox.style.width = "256px";
     dialogBox.style.overflow = "hidden";
     dialogBox.style.resize = "none";
+  }
+}
+
+function hideLeftMenu() {
+  let dialogBox = this.parentNode;
+  let leftMenu = document.querySelector("#"+dialogBox.id + " .leftMenu");
+  
+  if(leftMenu.style.display === "none") {
+    leftMenu.style.display = "inline-block";
+    this.innerHTML = "<";
+  }
+  else {
+    leftMenu.style.display = "none";
+    this.innerHTML = ">";
   }
 }
 
