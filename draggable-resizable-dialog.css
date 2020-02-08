@@ -28,7 +28,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	cursor: move;
-	background: #39c;
+	background: #40c;
 }
 .dialog .content {
 	position: absolute;

@@ -288,13 +288,10 @@ li:hover, label:hover {
 /*  border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
   border-top-right-radius: 15px;*/
-  border-radius: 10px;
-  margin-bottom: 30px;
 
-  width: 96vw;
-//  top: 60px;
-  box-shadow: 5px 5px 5px #555555;
+  width: 100%;
   background-color: #eeeeee;
+  //overflow: scroll;
 
 }
 
@@ -544,6 +541,9 @@ transition: all 0.4s ease 0s;
     background-color: currentColor;
 }
 
-
+.dialog {
+  resize: both;
+  overflow: scroll;
+}
 
 
