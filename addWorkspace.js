@@ -355,10 +355,15 @@ function addAnEvent(evt) {
 	let allGraphs = document.querySelectorAll("#"+this.parentNode.parentNode.parentNode.id+" .graphs li" );
 
 
+    // Handle editing and deletion
+    evLi.children[2].addEventListener("click", deleteThisEvent, false);
+    evLi.children[0].addEventListener("click", editThisEvent, false);
+
 	for(let elem = 0; elem < allGraphs.length; ++elem) {
-		if(allGraphs[elem].firstChild.id.includes("SNAD") || allGraphs[elem].firstChild.id.includes("SNINI") ||  allGraphs[elem].firstChild.id.includes("_ECC")) {
-		Plotly.addTraces(allGraphs[elem].firstChild, [{ x: [eventInfo[0]], name: evTitle}]);
+		if(allGraphs[elem].children[1].id.includes("SNAD") || allGraphs[elem].children[1].id.includes("SNINI") ||  allGraphs[elem].children[1].id.includes("_ECC")) {
+		Plotly.addTraces(allGraphs[elem].children[1], [{ x: [eventInfo[0]], name: evTitle}]);
 		}
+
 
 		/*console.log(allGraphs[elem]);
 		allGraphs[elem].firstChild.data[0].evTS = [];
@@ -369,9 +374,6 @@ function addAnEvent(evt) {
 */
 	}
 
-    // Handle editing and deletion
-    evLi.children[2].addEventListener("click", deleteThisEvent, false);
-    evLi.children[0].addEventListener("click", editThisEvent, false);
   }
   else {
     alert("An event with the same name has already been created in this workspace");
@@ -555,7 +557,38 @@ let tabID;
 }
 
 function deleteThisEvent(evt) {
-  delete eventWsList[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]][this.parentNode.children[1].innerHTML];
+
+  
+  let tabID;
+  let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
+  for(let t=0; t<existingTabs.length; ++t) { // for each tab
+    if(this.closest("#"+existingTabs[t].id)!=null) { // the workspace is the one of interest
+      tabID = existingTabs[t].id; // remember the ID of that workspace
+    }
+  }
+  
+  delete eventWsList[tabID.split("ctab")[1]][this.parentNode.children[1].innerHTML];
+    
+  	// Store as a graph variable
+	let allGraphs = document.querySelectorAll("#"+tabID+" .graphs li div:nth-child(2)" );
+
+  for(let elem = 0; elem < allGraphs.length; ++elem) {
+		if(allGraphs[elem].id.includes("SNAD") || allGraphs[elem].id.includes("SNINI") ||  allGraphs[elem].id.includes("_ECC")) {
+		  let allTraces = allGraphs[elem].data;
+		  for(let a=0; a<allTraces.length; ++a) {
+		    if(allTraces[a].name == this.parentNode.children[1].innerHTML) {
+		      Plotly.deleteTraces(allGraphs[elem].id, a);
+		    }
+		  }
+
+		}
+		  //Plotly.addTraces(allGraphs[elem].children[1], [{ x: [eventInfo[0]], name: evTitle}]);
+	}
+	
+
+
+
+
   this.parentNode.remove();
 }
 
@@ -568,6 +601,7 @@ function editThisEvent(evt) {
   document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .eventTitle").value = this.parentNode.children[1].innerHTML;
   document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .eventTitle").disabled = true;
   document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .eventTimestamp").value = eventWsList[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]][this.parentNode.children[1].innerHTML][0];
+  
 }
 
 function finalizeEditEvent(evt) {
@@ -579,6 +613,8 @@ function finalizeEditEvent(evt) {
     let eventInfo = [document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventTimestamp").value, document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventColor").value];
     eventWsList[this.parentNode.parentNode.parentNode.id.split("ctab")[1]][evTitle] = eventInfo;
 
+    deleteThisEvent(evt);
+    addAnEvent(evt);
   }
   else {
     alert("This event doesn't exist.");
