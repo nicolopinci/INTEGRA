@@ -295,6 +295,20 @@ li:hover, label:hover {
 
 }
 
+
+.deleteGraph {
+color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+            background: rgb(202, 60, 60); /* this is a maroon */
+            padding: 5px;
+}
+
+.deleteGraph:hover {
+  background: rgb(150, 0, 0);
+}
+
+
 #export, #import, #importCol, .plotButton, .editEventB, #addW, .addV {
 color: #494949 !important;
 text-decoration: none;

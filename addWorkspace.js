@@ -200,10 +200,19 @@ function createPlusSign(containerID) {
 }
 
 function createNewGraphBox(fileExtension, containerID, graphType) {
+
+  let closeButton = document.createElement("a");
+  closeButton.className = "deleteGraph";
+  closeButton.innerHTML = "×";
+  closeButton.style.float = "right";
+  closeButton.addEventListener("click", deleteThisGraph);
+
   let newGraphBox = document.createElement("div");
+  
   let graphLi = document.createElement("li");
   newGraphBox.className = "graphPreview";
   newGraphBox.id = containerID + "g" + fileExtension+"_"+graphType;
+    graphLi.appendChild(closeButton);
   graphLi.appendChild(newGraphBox);
 
   document.querySelector("#"+containerID + " .graphs ul").appendChild(graphLi);
@@ -213,6 +222,12 @@ function createNewGraphBox(fileExtension, containerID, graphType) {
 
   return newGraphBox;
 }
+
+
+function deleteThisGraph() {
+    this.parentNode.remove();
+}
+
 
 function createFirstWS() {
   var evObj = document.createEvent('Events');
