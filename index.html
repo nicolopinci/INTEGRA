@@ -58,11 +58,28 @@
           <h2>Add a new graph</h2>
         </div>
         <div class="modal-body">
+
+        <ul>
+                
+        <h3>Settings</h3>
+
+        <span></span>
+          <input type="text" class="graphTitle" placeholder="Title of the graph"></input>
+          <br/><br/>
+          <select class="selectVis">
+            <option value="visual">Visualize the events</option>
+            <option value="noVisual">Don't visualize the events</option>
+          </select>
+
+          
           <span></span>
-          <ul>
+          <br/><br/>
+          
+          <h3>Code</h3>
+
               <span>function customGraph(inData) {</span>
                 <br/>
-              <textarea placeholder="JavaScript code" class="JSCode" rows="20", cols="60" resizable></textarea>
+              <textarea placeholder="JavaScript code" class="JSCode" rows="5", cols="60" resizable></textarea>
               <br/>
               <span> &emsp; return outData; <br> }</span>
           </ul>

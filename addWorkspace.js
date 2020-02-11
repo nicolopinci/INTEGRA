@@ -362,7 +362,7 @@ function addAnEvent(evt) {
     evLi.children[0].addEventListener("click", editThisEvent, false);
 
 	for(let elem = 0; elem < allGraphs.length; ++elem) {
-		if(allGraphs[elem].children[1].id.includes("SNAD") || allGraphs[elem].children[1].id.includes("SNINI") ||  allGraphs[elem].children[1].id.includes("_ECC")) {
+		if(allGraphs[elem].children[1].id.includes("SNAD") || allGraphs[elem].children[1].id.includes("SNINI") ||  allGraphs[elem].children[1].id.includes("_ECC") || allGraphs[elem].children[1].id.includes("+visual")) {
 		Plotly.addTraces(allGraphs[elem].children[1], [{ x: [eventInfo[0]], name: evTitle, marker: {color: myCol}}]);
 		}
 
@@ -575,7 +575,7 @@ function deleteThisEvent(evt) {
 	let allGraphs = document.querySelectorAll("#"+tabID+" .graphs li div:nth-child(2)" );
 
   for(let elem = 0; elem < allGraphs.length; ++elem) {
-		if(allGraphs[elem].id.includes("SNAD") || allGraphs[elem].id.includes("SNINI") ||  allGraphs[elem].id.includes("_ECC")) {
+		if(allGraphs[elem].id.includes("SNAD") || allGraphs[elem].id.includes("SNINI") ||  allGraphs[elem].id.includes("_ECC") || allGraphs[elem].id.includes("+visual")) {
 		  let allTraces = allGraphs[elem].data;
 		  for(let a=0; a<allTraces.length; ++a) {
 		    if(allTraces[a].name == this.parentNode.children[1].innerHTML) {

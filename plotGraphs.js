@@ -476,8 +476,8 @@ function plotCustomScatter(inData, elementID, type) {
 }
 
 
-function plotCustomHeat(inData, elementID) {
-  Plotly.newPlot(elementID, inData[0], {showSendToCloud: true});
+function plotCustomHeat(inData, elementID, myTitle) {
+  Plotly.newPlot(elementID, inData[0], {title: myTitle, showSendToCloud: true});
 
   Plotly.plot(elementID, inData).then(function () {
     let i=0;
@@ -489,7 +489,8 @@ function plotCustomHeat(inData, elementID) {
       }
     ]);
   }
-    startAnimation(i);
+      startAnimation(i);
+     
   })
 
   function startAnimation(j) {
@@ -526,14 +527,33 @@ else if(fileName.split(".")[1]==="sn"){
   inData = parseSN(fileMap[fileName]);
 }
   //let inData = [[[1, 2]], [[1, 2]]];
-  eval("function defineCustomCode(inData) {" + this.parentNode.parentNode.children[1].children[2].value+" return outData;}");
+  
+  let modals = document.getElementsByClassName("modal");
+  
+  let currentModal = undefined;
+  
+  for(let m=0; m<modals.length; ++m) {
+    if(modals[m].style.display == "inline-block") {
+      currentModal = modals[m];
+    }
+  }
+  
+  eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
 
   let graphData = defineCustomCode(inData);
 
   let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
   // 4 var graphs
-  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, "custom"+countGraphs);
-  plotCustomHeat(graphData, newCustomGraphBox.id);
+
+  let visualizeEvents = currentModal.querySelector(" .selectVis").value;
+    let graphTitle = currentModal.querySelector(" .graphTitle").value;
+  
+  let graphIdentifier = "custom"+countGraphs+"+"+visualizeEvents;
+  
+  
+  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, graphIdentifier);
+ 
+  plotCustomHeat(graphData, newCustomGraphBox.id, graphTitle);
   //plotHeat(graphData, 'heatmap', newCustomGraphBox.id, 'Custom GVR', 'Custom x', 'Custom y');
 
 
