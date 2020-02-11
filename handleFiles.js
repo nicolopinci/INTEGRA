@@ -6,7 +6,7 @@ var wsChosenStartFrame = [];
 var wsChosenEndFrame = [];
 
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
-document.getElementById('cfiles').addEventListener('change', importColors, false);
+//document.getElementById('cfiles').addEventListener('change', importColors, false);
 
 function handleFileSelect(evt) {
   var files = evt.target.files; // FileList object

@@ -342,6 +342,8 @@ function addTabHandlers(workspaceTab) {
 function addAnEvent(evt) {
   // Add to event the event list
   evTitle = document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventTitle").value;
+  myCol = document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventColor").value;
+  
   if(!alreadyExist(evTitle, this.parentNode.parentNode.parentNode.id)) {
     evLi = document.createElement("li");
     evLi.innerHTML = "<span class=\"editEvent\">...</span><span>"+evTitle+"</span><span class=\"deleteEvent\">X</span>";
@@ -361,7 +363,7 @@ function addAnEvent(evt) {
 
 	for(let elem = 0; elem < allGraphs.length; ++elem) {
 		if(allGraphs[elem].children[1].id.includes("SNAD") || allGraphs[elem].children[1].id.includes("SNINI") ||  allGraphs[elem].children[1].id.includes("_ECC")) {
-		Plotly.addTraces(allGraphs[elem].children[1], [{ x: [eventInfo[0]], name: evTitle}]);
+		Plotly.addTraces(allGraphs[elem].children[1], [{ x: [eventInfo[0]], name: evTitle, marker: {color: myCol}}]);
 		}
 
 
