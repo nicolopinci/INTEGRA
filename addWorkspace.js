@@ -12,7 +12,6 @@ function addTab() {
 
 function createTabElement() {
   var workspaceTab = document.createElement("li");
-  //workspaceTab.style.zIndex=document.getElementsByClassName("tabsGroup")[0].children[0].childElementCount*(-1)-100;
   workspaceTab.appendChild(document.createTextNode("Workspace "+document.getElementsByClassName("tabsGroup")[0].children[0].childElementCount));
   workspaceTab.id = "tab"+document.getElementsByClassName("tabsGroup")[0].children[0].childElementCount;
   workspaceTab.className ="ws";
@@ -34,9 +33,6 @@ function createContainerElement() {
   dialogDiv.id = "dialog"+(document.getElementsByClassName("tabsGroup")[0].children[0].childElementCount-1);
   dialogDiv.className = "dialog";
   
-  /*let titleContainer = document.createElement("div");
-  titleContainer.style.position = "fixed";
-  titleContainer.name = "titleCont";*/
   
   let dialogTitlebar = document.createElement("div");
   dialogTitlebar.className = "titlebar";
@@ -44,13 +40,13 @@ function createContainerElement() {
   let closeButton = document.createElement("button");
   closeButton.className = "close";
   closeButton.name = "close";
-     closeButton.innerHTML = "×";
+  closeButton.innerHTML = "×";
   closeButton.style.color = "white";
   
   let minimizeButton = document.createElement("button");
   minimizeButton.className = "minimize";
   minimizeButton.name = "minimize";
-    minimizeButton.innerHTML = "_";
+  minimizeButton.innerHTML = "_";
   minimizeButton.style.color = "white";
   
    let hideLeft = document.createElement("button");
@@ -63,8 +59,6 @@ function createContainerElement() {
   dialogDiv.appendChild(closeButton);
   dialogDiv.appendChild(minimizeButton);
     dialogDiv.appendChild(hideLeft);
-  
-  // dialogDiv.appendChild(titleContainer);
   
   let container0 = document.getElementById("container");
 
@@ -83,7 +77,6 @@ function createContainerElement() {
   closeButton.addEventListener("click", closeWindow);
   minimizeButton.addEventListener("click", minimizeWindow);
     hideLeft.addEventListener("click", hideLeftMenu);
-  //dialogDiv.addEventListener("drag", activateFocus);
     
 	return newContainer;
 }
@@ -253,42 +246,20 @@ function addVariable(evt) {
   let listEl = document.createElement("li");
 
   let infoVariables = document.createElement("span");
-infoVariables.innerHTML = "You may access the dataset structure.";
+  infoVariables.innerHTML = "You may access the dataset structure.";
 
-
-let relation = document.createElement("input");
-relation.class="JSCode";
-relation.type = "text";
-relation.placeholder="JavaScript code";
-
-let returnOut = document.createTextNode("return outData;");
-
-listEl.appendChild(relation);
-listEl.appendChild(returnOut);
-varContainer.appendChild(listEl);
-
- // listEl.appendChild(infoVariables);
-
-
-/*for(let i=0; i<coorList.length; ++i) {
-  let nameShown = document.createElement("input");
-  nameShown.type = "text";
-  nameShown.placeholder = "Name of the variable ("+coorList[i]+")";
-
-  let equalSign = document.createTextNode(" = ");
 
   let relation = document.createElement("input");
-  relation.id=varContainer.id+"var"+coorList[i];
+  relation.class="JSCode";
   relation.type = "text";
-  relation.placeholder="Relation to other variables";
+  relation.placeholder="JavaScript code";
 
-  listEl.appendChild(nameShown);
-  listEl.appendChild(equalSign);
+  let returnOut = document.createTextNode("return outData;");
+
   listEl.appendChild(relation);
-  listEl.appendChild(document.createElement("br"));
-
+  listEl.appendChild(returnOut);
   varContainer.appendChild(listEl);
-} */
+
 }
 
 function addRadioButton(buttonName, num) {
@@ -321,11 +292,9 @@ function handleWorkspaceStatus(newContainer) {
   document.querySelectorAll("#" + newContainer.id + " .framerate")[0].addEventListener("change", chooseFramerate, false);
 
   wsChosenStartFrame.push("");
-  //document.querySelectorAll("#" + newContainer.id + " .startFrame")[0].addEventListener("change", chooseSF, false);
   document.querySelectorAll("#" + newContainer.id + " .frameStartS")[0].addEventListener("change", chooseSF, false);
 
   wsChosenEndFrame.push("");
-  //document.querySelectorAll("#" + newContainer.id + " .endFrame")[0].addEventListener("change", chooseEF, false);
   document.querySelectorAll("#" + newContainer.id + " .frameEndS")[0].addEventListener("change", chooseEF, false);
 }
 
@@ -362,18 +331,14 @@ function addAnEvent(evt) {
     evLi.children[0].addEventListener("click", editThisEvent, false);
 
 	for(let elem = 0; elem < allGraphs.length; ++elem) {
+
+			if(!allGraphs[elem].children[0].className.includes("addNewGraph")) {
+						console.log(allGraphs[elem].children[1].id);
 		if(allGraphs[elem].children[1].id.includes("SNAD") || allGraphs[elem].children[1].id.includes("SNINI") ||  allGraphs[elem].children[1].id.includes("_ECC") || allGraphs[elem].children[1].id.includes("+visual")) {
 		Plotly.addTraces(allGraphs[elem].children[1], [{ x: [eventInfo[0]], name: evTitle, marker: {color: myCol}}]);
 		}
+		}
 
-
-		/*console.log(allGraphs[elem]);
-		allGraphs[elem].firstChild.data[0].evTS = [];
-			allGraphs[elem].firstChild.data[0].evName = [];
-
-		allGraphs[elem].firstChild.data[0].evTS.push(eventInfo[0]);
-				allGraphs[elem].firstChild.data[0].evName.push(evTitle);
-*/
 	}
 
   }
@@ -390,9 +355,7 @@ function simulateClickOnTab(workspaceTab) {
 }
 
 function openWorkspace(evt) {
-  for(var i=0; i<document.querySelectorAll(".container").length; ++i) {
-    //document.querySelectorAll(".container")[i].style.zIndex--;
-  }
+
   document.getElementById("c"+this.id).style.display = "inline-block";
 
   for(var i=0; i<document.querySelectorAll(".ws").length; ++i) {

@@ -3,6 +3,7 @@ function addCustomGraph(evt) {
   document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .close").addEventListener("click", closeModal, false);
   //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .addV").addEventListener("click", addVariable, false);
   document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotHeat").addEventListener("click", plotNewCustomHeat, false);
+    document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotHeatStatic").addEventListener("click", plotNewCustomStaticHeat, false);
   document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotScatter2d").addEventListener("click", plotNewCustomScatter2D, false);
   document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotScatter3d").addEventListener("click", plotNewCustomScatter3D, false);
 
@@ -516,17 +517,59 @@ function plotCustomHeat(inData, elementID, myTitle) {
 
 
 function plotNewCustomHeat(evt) {
-  //console.log(this.parentNode.parentNode.parentNode.parentNode.id);
+
   let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
   let inData = [];
   if(fileName.split(".")[1]==="2d") {
 
     inData = getAllPlayersXYAllFrames(fileMap[fileName]);
+    }
+    else if(fileName.split(".")[1]==="sn"){
+      inData = parseSN(fileMap[fileName]);
+    }
+  
+  let modals = document.getElementsByClassName("modal");
+  
+  let currentModal = undefined;
+  
+  for(let m=0; m<modals.length; ++m) {
+    if(modals[m].style.display == "inline-block") {
+      currentModal = modals[m];
+    }
+  }
+  
+  eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
+
+  let graphData = defineCustomCode(inData);
+
+  let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
+  // 4 var graphs
+
+  let visualizeEvents = currentModal.querySelector(" .selectVis").value;
+    let graphTitle = currentModal.querySelector(" .graphTitle").value;
+  
+  let graphIdentifier = "custom"+countGraphs;
+  
+  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, graphIdentifier);
+ 
+  plotCustomHeat(graphData, newCustomGraphBox.id, graphTitle);
+
 }
-else if(fileName.split(".")[1]==="sn"){
-  inData = parseSN(fileMap[fileName]);
-}
-  //let inData = [[[1, 2]], [[1, 2]]];
+
+
+
+function plotNewCustomStaticHeat(evt) {
+
+  console.log("Static");
+  let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
+  let inData = [];
+  if(fileName.split(".")[1]==="2d") {
+
+    inData = getAllPlayersXYAllFrames(fileMap[fileName]);
+    }
+    else if(fileName.split(".")[1]==="sn"){
+      inData = parseSN(fileMap[fileName]);
+    }
   
   let modals = document.getElementsByClassName("modal");
   
@@ -550,43 +593,13 @@ else if(fileName.split(".")[1]==="sn"){
   
   let graphIdentifier = "custom"+countGraphs+"+"+visualizeEvents;
   
-  
   let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, graphIdentifier);
  
-  plotCustomHeat(graphData, newCustomGraphBox.id, graphTitle);
-  //plotHeat(graphData, 'heatmap', newCustomGraphBox.id, 'Custom GVR', 'Custom x', 'Custom y');
-
-
-  //let varMap = getVariableArrayLisp(getVariableNamesLisp(fileMap["chorales.lisp"]), parseBach(fileMap["chorales.lisp"]));
-
-  //let varMap = {"ds": getAllPlayersXYAllFrames(fileMap["CapBotT1Suav.2d"])};
-  //let varMap = {"ds": [[[1, 2, 3], [1, 4, 5]], [[1, 7, 9], [2, 5, 6]]]};
-
-  /*let outMap = {};
-
-  let wsID = this.parentNode.parentNode.parentNode.parentNode.id;
-
-console.log(nerdamer(document.querySelector("#"+wsID + " #varx").value, varMap).evaluate().toString());
-      outMap["x"] = nerdamer(document.querySelector("#"+wsID + " #varx").value, varMap).evaluate().toString();
-      outMap["y"] = nerdamer(document.querySelector("#"+wsID + " #vary").value, varMap).evaluate().toString();
-      outMap["z"] = nerdamer(document.querySelector("#"+wsID + " #varz").value, varMap).evaluate().toString();
-      outMap["color"] = nerdamer(document.querySelector("#"+wsID + " #varcolor").value, varMap).evaluate().toString();
-      outMap["animation"] = nerdamer(document.querySelector("#"+wsID + " #varanimation").value, varMap).evaluate().toString();
-
-console.log(outMap);
-
-  try {
-    let containerID = this.parentNode.parentNode.parentNode.parentNode.id;
-
-    let newGraphBox = createNewGraphBox("lisp", containerID, "_"+this.parentNode.parentNode.parentNode.parentNode.children[2].children[0].childElementCount);
-    plotData(outMap["x"].split("[")[1].split("]")[0].split(","), outMap["y"].split("[")[1].split("]")[0].split(","), 'scatter', newGraphBox.id, "Title", "x", "y");
-  }
-  catch(Exception){
-    alert("Error");
-  }*/
-
+  plotHeat(graphData[0], 'heatmap', newCustomGraphBox.id, graphTitle, '', '');
 
 }
+
+
 
 
 function plotNewCustomScatter2D(evt) {
