@@ -560,7 +560,6 @@ function plotNewCustomHeat(evt) {
 
 function plotNewCustomStaticHeat(evt) {
 
-  console.log("Static");
   let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
   let inData = [];
   if(fileName.split(".")[1]==="2d") {
@@ -613,7 +612,18 @@ else if(fileName.split(".")[1]==="sn"){
   inData = parseSN(fileMap[fileName]);
 }
 
-  eval("function defineCustomCode(inData) {" + this.parentNode.parentNode.children[1].children[2].value+" return outData;}");
+  
+  let modals = document.getElementsByClassName("modal");
+  
+  let currentModal = undefined;
+  
+  for(let m=0; m<modals.length; ++m) {
+    if(modals[m].style.display == "inline-block") {
+      currentModal = modals[m];
+    }
+  }
+
+  eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
   let graphData = defineCustomCode(inData);
 
   let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
