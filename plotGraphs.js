@@ -28,11 +28,16 @@ function drawPresetGraphs(graphType, parsedData, containerID) {
       plotNetwork(newGraphBoxNG.id, parsedData,0);
 
 	  // Graph with players (animated)
- /*   let newGraphBoxNGA = createNewGraphBox("2d", containerID, "NGA");
+    let newGraphBoxNGA = createNewGraphBox("2d", containerID, "NGA");
       newGraphBoxNGA.style.height = "430px";
       newGraphBoxNGA.style.width = "690px";
       newGraphBoxNGA.style.padding = "4px";
-      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, 100); */
+      let canvasAnimated = document.createElement('canvas');
+      
+      canvasAnimated.height = "423";
+      canvasAnimated.width = "683";
+      newGraphBoxNGA.appendChild(canvasAnimated);
+      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, parsedData.length-1); 
 
       // Eccentricity GVR
       let newGraphBoxEcc = createNewGraphBox("2d", containerID, "ECC");
@@ -199,27 +204,23 @@ return layout;
 
 
 function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame) {
+  
+    if(startFrame < endFrame) {
+      let canvas = document.getElementById(elementID).querySelector("canvas");
+      let ctx = canvas.getContext('2d');
+      ctx.lineWidth = 1;
 
-var allImages = [];
-
-for(let i=startFrame; i<endFrame; ++i) {
-	var c = computeNetwork(elementID, dataset, i);
-
-	allImages.push(Canvas2Image.convertToPNG(c, 1000, 1000));
+	    var c = computeNetwork(elementID, dataset, startFrame);   
+	    image = Canvas2Image.convertToPNG(c, canvas.width, canvas.height);
+      
+      canvas.style.background = "url("+image.src+")";
+      
+      setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, startFrame + 1, endFrame), 50);
+    }
+ 
 }
 
-gifshot.createGIF({
-  'images': allImages
-},function(obj) {
-  if(!obj.error) {
-    var image = obj.image,
-    animatedImage = document.createElement('img');
-    animatedImage.src = image;
-    document.getElementById(elementID).appendChild(animatedImage);
-  }
-});
 
-}
 
 function plotNetwork(elementID, dataSet,frame){
 	let canvas = computeNetwork(elementID, dataSet, frame);
@@ -227,13 +228,14 @@ function plotNetwork(elementID, dataSet,frame){
 
 }
 
+
+  
 function computeNetwork(elementID, dataSet,frame){
  var teamOne = [], teamTwo = [];
  for (i = 0; i<=10; i++){
    teamOne.push([dataSet[frame][0][i][0],dataSet[frame][0][i][1]])
    teamTwo.push([dataSet[frame][1][i][0],dataSet[frame][1][i][1]])
  }
-
 
  var delaunay1 = new Delaunay(teamOne);
  var delaunay2 = new Delaunay(teamTwo);
@@ -365,9 +367,6 @@ canvas.width = "683";
 pitch.draw();
 
 
-
-
- //console.log(triangles1[0][0]+triangles1[0][1]);
  ctx.linewidth = 1;
  let f=6.5;
  for(x = 0; x < triangles1.length-3; x = x +3){
