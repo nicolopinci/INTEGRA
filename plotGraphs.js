@@ -154,6 +154,9 @@ function plotScatter(dataArray, typedata, elementID, myTitle, xaxis, yaxis) {
   }
 ];
 
+  console.log("-x-x-x-x-x-x-x-");
+  console.log(data);
+
 let layout = {
   scene: {
 		xaxis:{title: 'Sender'},
@@ -439,21 +442,36 @@ return canvas;
 }
 
 
+
+
 function plotCustomScatter(inData, elementID, type) {
-  Plotly.newPlot(elementID, [], {showSendToCloud: true});
+  
+  Plotly.newPlot(elementID, inData[0], {showSendToCloud: true});
 
   Plotly.plot(elementID, inData).then(function () {
-    let i=0;
-    for(i=0; i<inData.length; ++i) {
-    Plotly.addFrames(elementID, [
-      {
-        data: [{x: inData[i][0], y: inData[i][1], z: inData[i][2], type: type}],
-        name: 'frame'+i
+    let j=0;
+    for(j=0; j<inData.length; ++j) {
+      let xValues = [];
+      let yValues = [];
+      let zValues = [];
+      for(let i=0; i<inData[j].length; ++i) {
+        xValues.push(inData[j][i][0]);
+        yValues.push(inData[j][i][1]);
+        zValues.push(inData[j][i][2]);
       }
-    ]);
-  }
-    startAnimation(i);
-  })
+   
+      let myData = [{x: xValues, y: yValues, z: zValues, type: type}];
+ 
+      Plotly.addFrames(elementID, [
+        {
+          data: myData,
+          name: 'frame'+j
+        }
+      ]);
+      
+    }
+      startAnimation(j);
+    })
 
   function startAnimation(j) {
     let anArray = [];
@@ -545,7 +563,6 @@ function plotNewCustomHeat(evt) {
   let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
   // 4 var graphs
 
-  let visualizeEvents = currentModal.querySelector(" .selectVis").value;
     let graphTitle = currentModal.querySelector(" .graphTitle").value;
   
   let graphIdentifier = "custom"+countGraphs;
@@ -626,14 +643,26 @@ else if(fileName.split(".")[1]==="sn"){
   eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
   let graphData = defineCustomCode(inData);
 
+  
   let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
 
+  let visualizeEvents = currentModal.querySelector(" .selectVis").value;
+  
+  let graphTitle = currentModal.querySelector(" .graphTitle").value;
+  
+  let graphIdentifier = "custom"+countGraphs+"+"+visualizeEvents;
+  
+  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, graphIdentifier);
+  
   // 4 var graphs
-  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, "customScatter"+countGraphs);
   plotCustomScatter(graphData, newCustomGraphBox.id, 'scatter');
 }
 
+
+
+
 function plotNewCustomScatter3D(evt) {
+
   let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
   let inData = [];
   if(fileName.split(".")[1]==="2d") {
@@ -644,12 +673,29 @@ else if(fileName.split(".")[1]==="sn"){
   inData = parseSN(fileMap[fileName]);
 }
 
-  eval("function defineCustomCode(inData) {" + this.parentNode.parentNode.children[1].children[2].value+" return outData;}");
+  let modals = document.getElementsByClassName("modal");
+  
+  let currentModal = undefined;
+  
+  for(let m=0; m<modals.length; ++m) {
+    if(modals[m].style.display == "inline-block") {
+      currentModal = modals[m];
+    }
+  }
+  
+  eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
+  
   let graphData = defineCustomCode(inData);
-
-  let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
-
+  
+ let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
+  
+  let graphTitle = currentModal.querySelector(" .graphTitle").value;
+  
+  let graphIdentifier = "custom"+countGraphs;
+  
+  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, graphIdentifier);
+  
+ 
   // 4 var graphs
-  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, "customScatter"+countGraphs);
   plotCustomScatter(graphData, newCustomGraphBox.id, 'scatter3d');
 }
