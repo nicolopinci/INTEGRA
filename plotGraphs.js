@@ -217,6 +217,9 @@ function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame) {
       
       setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, startFrame + 1, endFrame), 50);
     }
+    else {
+      plotAnimatedNetwork.bind(null, elementID, dataset, 1, endFrame);
+    }
  
 }
 
