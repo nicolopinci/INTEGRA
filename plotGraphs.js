@@ -1,25 +1,59 @@
+/* function getCurrentModal() {
+
+  let modals = document.getElementsByClassName("modal");
+  
+  let currentModal = undefined;
+  
+  for(let m=0; m<modals.length; ++m) {
+    if(modals[m].style.display == "inline-block") {
+      currentModal = modals[m];
+    }
+  }
+  
+  return currentModal;
+} */
+
+
+function getCurrentWorkspace() {
+  let tab;
+  
+  zIndexMax = Number.NEGATIVE_INFINITY;
+  tab = document.getElementsByClassName("container")[0];
+  
+  let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
+  for(let t=0; t<existingTabs.length; ++t) { // for each tab
+    if(existingTabs[t].style.zIndex > zIndexMax && existingTabs[t].style.display != 'none') { // the workspace is the one of interest
+      tab = existingTabs[t]; // remember the ID of that workspace
+      zIndexMax = existingTabs[t].style.zIndex;
+    }
+  }
+  
+  return tab;
+}
+
+function getCurrentModal() {
+
+  let currentWorkspace = getCurrentWorkspace();
+  return document.querySelector("#" + currentWorkspace.id + " .modal");
+
+}
+
+
 function addCustomGraph(evt) {
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .modal").style.display = "inline-block";
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .close").addEventListener("click", closeModal, false);
-  //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .addV").addEventListener("click", addVariable, false);
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotHeat").addEventListener("click", plotNewCustomHeat, false);
-    document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotHeatStatic").addEventListener("click", plotNewCustomStaticHeat, false);
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotScatter2d").addEventListener("click", plotNewCustomScatter2D, false);
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .plotScatter3d").addEventListener("click", plotNewCustomScatter3D, false);
 
-
-
+  getCurrentModal().style.display = "inline-block";
+  getCurrentModal().querySelector(" .close").addEventListener("click", closeModal, false);
+  getCurrentModal().querySelector(" .plotHeat").addEventListener("click", plotNewCustomHeat, false);
+  getCurrentModal().querySelector(" .plotHeatStatic").addEventListener("click", plotNewCustomStaticHeat, false);
+  getCurrentModal().querySelector(" .plotScatter2d").addEventListener("click", plotNewCustomScatter2D, false);
+  getCurrentModal().querySelector(" .plotScatter3d").addEventListener("click", plotNewCustomScatter3D, false);
 }
 
 function drawPresetGraphs(graphType, parsedData, containerID) {
   switch(graphType) {
     case "2d":
 
-      /* 4 var graphs
-      let newGraphBoxEcc = createNewGraphBox("2d", containerID, "ECC");
-      plotCustomHeat([[[1, 2]], [[1, 2]]], newGraphBoxEcc.id);
-      */
-
+      
       // Graph with players
     let newGraphBoxNG = createNewGraphBox("2d", containerID, "NG");
       newGraphBoxNG.style.height = "430px";
@@ -37,7 +71,7 @@ function drawPresetGraphs(graphType, parsedData, containerID) {
       canvasAnimated.height = "423";
       canvasAnimated.width = "683";
       newGraphBoxNGA.appendChild(canvasAnimated);
-      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, parsedData.length-1); 
+      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, 100); 
 
       // Eccentricity GVR
       let newGraphBoxEcc = createNewGraphBox("2d", containerID, "ECC");
@@ -216,9 +250,6 @@ function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame) {
       canvas.style.background = "url("+image.src+")";
       
       setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, startFrame + 1, endFrame), 50);
-    }
-    else {
-      plotAnimatedNetwork.bind(null, elementID, dataset, 1, endFrame);
     }
  
 }
@@ -535,7 +566,6 @@ function plotCustomHeat(inData, elementID, myTitle) {
 
 }
 
-
 function plotNewCustomHeat(evt) {
 
   let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
@@ -548,15 +578,7 @@ function plotNewCustomHeat(evt) {
       inData = parseSN(fileMap[fileName]);
     }
   
-  let modals = document.getElementsByClassName("modal");
-  
-  let currentModal = undefined;
-  
-  for(let m=0; m<modals.length; ++m) {
-    if(modals[m].style.display == "inline-block") {
-      currentModal = modals[m];
-    }
-  }
+  let currentModal = getCurrentModal();
   
   eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
 
