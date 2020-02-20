@@ -559,6 +559,7 @@ function plotCustomHeat(inData, elementID, myTitle) {
 function prepareCustomPlot(eventPossibility) {
 
   let currentModal = getCurrentModal();
+  console.log(currentModal);
   let currentWorkspaceID = "ctab" + currentModal.id.split("Modal")[1];
   
   let fileName = wsChosenDS[currentWorkspaceID.split("tab")[1]];
