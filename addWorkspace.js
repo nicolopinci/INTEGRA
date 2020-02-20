@@ -236,7 +236,7 @@ function resizeGraph(evt) {
 }
 
 function closeModal(evt) {
-  this.parentNode.parentNode.parentNode.style.display = "none";
+  getCurrentModal().style.display = "none";
 }
 
 function addVariable(evt) {
@@ -289,18 +289,17 @@ function handleWorkspaceStatus(newContainer) {
   document.querySelectorAll("#" + newContainer.id + " .datasetList")[0].addEventListener("change", chooseDataset, false);
 
   wsChosenFramerate.push("");
-  document.querySelectorAll("#" + newContainer.id + " .framerate")[0].addEventListener("change", chooseFramerate, false);
+  document.querySelectorAll("#" + newContainer.id + " .framerate")[0].addEventListener("change", setTimeParameters, false);
 
   wsChosenStartFrame.push("");
-  document.querySelectorAll("#" + newContainer.id + " .frameStartS")[0].addEventListener("change", chooseSF, false);
+  document.querySelectorAll("#" + newContainer.id + " .frameStartS")[0].addEventListener("change", setTimeParameters, false);
 
   wsChosenEndFrame.push("");
-  document.querySelectorAll("#" + newContainer.id + " .frameEndS")[0].addEventListener("change", chooseEF, false);
+  document.querySelectorAll("#" + newContainer.id + " .frameEndS")[0].addEventListener("change", setTimeParameters, false);
 }
 
 function addEventHandlers(newContainer) {
   document.querySelectorAll("#" + newContainer.id + " .addEvent")[0].addEventListener("click", addAnEvent, false);
-  document.querySelectorAll("#" + newContainer.id + " .editEventB")[0].addEventListener("click", finalizeEditEvent, false);
 }
 
 function addTabHandlers(workspaceTab) {
@@ -308,44 +307,49 @@ function addTabHandlers(workspaceTab) {
   simulateClickOnTab(workspaceTab); // When a tab is created, open it
 }
 
+function canAddEvents(allGraphs, elem) {
+  if(!allGraphs[elem].children[0].className.includes("addNewGraph")) {
+		    if(allGraphs[elem].children[1].id.includes("SNAD") || allGraphs[elem].children[1].id.includes("SNINI") ||  allGraphs[elem].children[1].id.includes("_ECC") || allGraphs[elem].children[1].id.includes("+visual")) {
+		      return true;
+		    }
+		    }
+		    return false;
+}
+
 function addAnEvent(evt) {
-  // Add to event the event list
-  evTitle = document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventTitle").value;
-  myCol = document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventColor").value;
+
+  currentWorkspace = getCurrentWorkspace();
   
-  if(!alreadyExist(evTitle, this.parentNode.parentNode.parentNode.id)) {
+  // Add to event the event list
+  evTitle = currentWorkspace.querySelector(" .eventTitle").value;
+  myCol = currentWorkspace.querySelector(" .eventColor").value;
+  
+  if(!alreadyExist(evTitle, currentWorkspace.id)) {
     evLi = document.createElement("li");
-    evLi.innerHTML = "<span class=\"editEvent\">...</span><span>"+evTitle+"</span><span class=\"deleteEvent\">X</span>";
-    document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .ulEvents").appendChild(evLi);
+    evLi.innerHTML = "<span></span><span>"+evTitle+"</span><span class=\"deleteEvent\">&times</span>";
+    currentWorkspace.querySelector(" .ulEvents").appendChild(evLi);
 
     // Store in memory
-    let eventInfo = [document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventTimestamp").value, document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventColor").value];
-    eventWsList[this.parentNode.parentNode.parentNode.id.split("ctab")[1]][evTitle] = eventInfo;
+    let eventInfo = [currentWorkspace.querySelector(" .eventTimestamp").value, currentWorkspace.querySelector(" .eventColor").value];
+    eventWsList[currentWorkspace.id.split("ctab")[1]][evTitle] = eventInfo;
 
-	// Store as a graph variable
-	let allGraphs = document.querySelectorAll("#"+this.parentNode.parentNode.parentNode.id+" .graphs li" );
-
+	  // Store as a graph variable
+	  let allGraphs = currentWorkspace.querySelectorAll(" .graphs li" );
 
     // Handle editing and deletion
     evLi.children[2].addEventListener("click", deleteThisEvent, false);
-    evLi.children[0].addEventListener("click", editThisEvent, false);
 
-	for(let elem = 0; elem < allGraphs.length; ++elem) {
-
-			if(!allGraphs[elem].children[0].className.includes("addNewGraph")) {
-						console.log(allGraphs[elem].children[1].id);
-		if(allGraphs[elem].children[1].id.includes("SNAD") || allGraphs[elem].children[1].id.includes("SNINI") ||  allGraphs[elem].children[1].id.includes("_ECC") || allGraphs[elem].children[1].id.includes("+visual")) {
-		Plotly.addTraces(allGraphs[elem].children[1], [{ x: [eventInfo[0]], name: evTitle, marker: {color: myCol}}]);
-		}
-		}
-
-	}
-
-  }
-  else {
-    alert("An event with the same name has already been created in this workspace");
-  }
+	  for(let elem = 0; elem < allGraphs.length; ++elem) {
+			  if(canAddEvents(allGraphs, elem)) {
+		        Plotly.addTraces(allGraphs[elem].children[1], [{ x: [eventInfo[0]], name: evTitle, marker: {color: myCol}}]);
+		      }
+		    }
+	  }
+    else {
+      alert("An event with the same name has already been created in this workspace");
+    }
 }
+
 
 function simulateClickOnTab(workspaceTab) {
   // Open the tab when created
@@ -369,157 +373,60 @@ function openWorkspace(evt) {
 }
 
 
-// Parameters
-function chooseFramerate(evt) {
-	//console.log("Framerate chosen");
-  wsChosenFramerate[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]]=this.value;
-  //let allGraphs = document.querySelectorAll("#" + this.parentNode.parentNode.parentNode.parentNode.id + " .graphPreview");
-  /*let currentFile = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]];
-  let datasetData = null;
+// Time parameters
+function timeParametersSet(currentWorkspace) {
+  return currentWorkspace.querySelector(".framerate").value != "" && currentWorkspace.querySelector(".frameStartS").value != "" && currentWorkspace.querySelector(".frameEndS").value != "";
+}
 
-  if(wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]].split(".")[1]=="2d") {
-	   datasetData = getAllPlayersXYAllFrames(fileMap[currentFile]);
-  }
-  else if(wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]].split(".")[1]=="sn") {
-	  datasetData = parseSN(fileMap[currentFile]);
-  }
-
-  let datasetLength = datasetData.length;
-
-  let frameRatio = Math.ceil(datasetLength/(5400*this.value));
-
-  console.log(frameRatio);
-
-  if(frameRatio>1) {
-    //console.log(document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.id + " .graphs"));
-    //console.log(document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul"));
-
-    document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").innerHTML = "";
-    let frameratedArray = [];
-
-    for(let i=0; i<datasetData.length; ++i) {
-      if(i%frameRatio===0) {
-        frameratedArray.push(datasetData[i]);
+function setTimeParameters(evt) {
+    let currentWorkspace = getCurrentWorkspace();
+    let tabNum = currentWorkspace.id.split("ctab")[1];
+    let currentFile = currentWorkspace.querySelector(".datasetList").value;
+    
+    if(timeParametersSet(currentWorkspace)) {
+      wsChosenFramerate[tabNum] = currentWorkspace.querySelector(" .framerate").value;
+      wsChosenStartFrame[tabNum] = currentWorkspace.querySelector(" .frameStartS").value;
+      wsChosenEndFrame[tabNum] = currentWorkspace.querySelector(" .frameEndS").value;
+      
+      if(wsChosenDS[tabNum].split(".")[1]=="2d") {
+	        datasetData = getAllPlayersXYAllFrames(fileMap[currentFile]);
       }
-    }
-
-    drawPresetGraphs(currentFile.split(".")[1], frameratedArray, this.parentNode.parentNode.parentNode.parentNode.id); // Presets
-    createPlusSign(this.parentNode.parentNode.parentNode.parentNode.id);
-
-  }*/
-
-    setTimeframes(this.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]);
-
-}
-
-function setTimeframes(tabNum) {
-
-let sf = wsChosenStartFrame[tabNum];
-let ef = wsChosenEndFrame[tabNum];
-
-  let currentFile = wsChosenDS[tabNum];
-  let datasetData = null;
-
-  if(wsChosenDS[tabNum].split(".")[1]=="2d") {
-	   datasetData = getAllPlayersXYAllFrames(fileMap[currentFile]);
-  }
-  else if(wsChosenDS[tabNum].split(".")[1]=="sn") {
-	  datasetData = parseSN(fileMap[currentFile]);
-  }
-
-  let datasetLength = datasetData.length;
-
-  let frameRatio = Math.ceil(datasetLength/(5400*wsChosenFramerate[tabNum]));
-
-  console.log(frameRatio);
-
-  if(frameRatio>1) {
-
-	allGraphs = document.querySelectorAll("#ctab" + tabNum + " .graphs ul li");
-
-	//console.log(allGraphs);
-	for(let liEl = 0; liEl < allGraphs.length; ++liEl) {
-		if(allGraphs[liEl].firstChild.id.includes("custom")) {
-		}
-		else {
-					allGraphs[liEl].remove();
-		}
-
-	}
-    //document.querySelector("#ctab" + tabNum + " .graphs ul").innerHTML = "";
-    let frameratedArray = [];
-
-    for(let i=sf; i<ef; ++i) {
-      if(i%frameRatio===0) {
-        frameratedArray.push(datasetData[i]);
+      else if(wsChosenDS[tabNum].split(".")[1]=="sn") {
+	        datasetData = parseSN(fileMap[currentFile]);
       }
-    }
+      
+      let datasetLength = datasetData.length;
 
-    drawPresetGraphs(currentFile.split(".")[1], frameratedArray, "ctab"+tabNum); // Presets
-    createPlusSign("ctab"+tabNum);
+      let frameRatio = Math.ceil(datasetLength/(5400*wsChosenFramerate[tabNum]));
 
+
+      if(frameRatio>1) {
+
+	      allGraphs = document.querySelectorAll("#ctab" + tabNum + " .graphs ul li");
+
+	      for(let liEl = 0; liEl < allGraphs.length; ++liEl) {
+		      if(!allGraphs[liEl].firstChild.id.includes("custom")) {
+		        allGraphs[liEl].remove();
+          }
+	      }
+
+      let frameratedArray = [];
+
+      for(let i=wsChosenStartFrame[tabNum]; i<wsChosenEndFrame[tabNum]; ++i) {
+        if(i%frameRatio===0) {
+            frameratedArray.push(datasetData[i]);
+          }
+        }
+
+        drawPresetGraphs(currentFile.split(".")[1], frameratedArray, "ctab"+tabNum); // Presets
+        createPlusSign("ctab"+tabNum);
+
+     }
   }
+            
 }
 
-function chooseSF(evt) {
 
-let tabID;
-  let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
-  for(let t=0; t<existingTabs.length; ++t) { // for each tab
-    if(this.closest("#"+existingTabs[t].id)!=null) { // the workspace is the one of interest
-      tabID = existingTabs[t].id; // remember the ID of that workspace
-    }
-  }
-
-  let fileName = document.querySelector("#" + tabID + " .datasetList").value; // get the name of the imported dataset
-
-  wsChosenStartFrame[tabID.split("ctab")[1]]=this.value;
-  //document.querySelector("#"+tabID+" .startFrame").value = this.value;
-  //document.querySelector("#"+tabID+" .frameStartS").value = this.value;
-  if(this.value>wsChosenEndFrame[tabID.split("ctab")[1]]) {
-    wsChosenEndFrame[tabID.split("ctab")[1]]=this.value;
-    //document.querySelector("#"+tabID+" .endFrame").value = this.value;
-    //document.querySelector("#"+tabID+" .frameEndS").value = this.value;
-  }
-
-  setTimeframes(tabID.split("ctab")[1]);
-  try {
-	  // Graph with players
-	  let newGraphBoxNG = document.querySelector("#"+tabID+"g2d_NG");
-	  newGraphBoxNG.innerHTML = "";
-	  plotNetwork(newGraphBoxNG.id, getAllPlayersXYAllFrames(fileMap[fileName]),this.value);
-  }
-  finally {
-
-  }
-}
-
-function chooseEF(evt) {
-
-let tabID;
-  let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
-  for(let t=0; t<existingTabs.length; ++t) { // for each tab
-    if(this.closest("#"+existingTabs[t].id)!=null) { // the workspace is the one of interest
-      tabID = existingTabs[t].id; // remember the ID of that workspace
-    }
-  }
-
-  let fileName = document.querySelector("#" + tabID + " .datasetList").value; // get the name of the imported dataset
-  
-  
-  wsChosenEndFrame[tabID.split("ctab")[1]]=this.value;
-  //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .endFrame").value = this.value;
-  //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .frameEndS").value = this.value;
-
-  if(this.value<wsChosenStartFrame[tabID.split("ctab")[1]]) {
-    wsChosenStartFrame[tabID.split("ctab")[1]]=this.value;
-    //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .startFrame").value = this.value;
-    //document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.id+" .frameStartS").value = this.value;
-  }
-
-    setTimeframes(tabID.split("ctab")[1]);
-
-}
 
 function deleteThisEvent(evt) {
 
@@ -547,50 +454,12 @@ function deleteThisEvent(evt) {
 		  }
 
 		}
-		  //Plotly.addTraces(allGraphs[elem].children[1], [{ x: [eventInfo[0]], name: evTitle}]);
 	}
 	
-
-
-
-
   this.parentNode.remove();
 }
 
-function editThisEvent(evt) {
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .editEventB").style.display = "block";
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .addEvent").style.display = "none";
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .eventTitle ~ .select-label").style.display = "none";
 
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .eventColor").value = "";
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .eventTitle").value = this.parentNode.children[1].innerHTML;
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .eventTitle").disabled = true;
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.parentNode.parentNode.id+" .eventTimestamp").value = eventWsList[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("ctab")[1]][this.parentNode.children[1].innerHTML][0];
-  
-}
-
-function finalizeEditEvent(evt) {
-  // Add to event the event list
-  evTitle = document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventTitle").value;
-  if(alreadyExist(evTitle, this.parentNode.parentNode.parentNode.id)) {
-
-    // Store in memory
-    let eventInfo = [document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventTimestamp").value, document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventColor").value];
-    eventWsList[this.parentNode.parentNode.parentNode.id.split("ctab")[1]][evTitle] = eventInfo;
-
-    deleteThisEvent(evt);
-    addAnEvent(evt);
-  }
-  else {
-    alert("This event doesn't exist.");
-  }
-
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventTitle").disabled = false;
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .editEventB").style.display = "none";
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .addEvent").style.display = "block";
-  document.querySelector("#"+this.parentNode.parentNode.parentNode.id+" .eventTitle ~ .select-label").style.display = "block";
-
-}
 
 function alreadyExist(evTitle, containerID) {
   if(eventWsList[containerID.split("ctab")[1]][evTitle]===undefined) {

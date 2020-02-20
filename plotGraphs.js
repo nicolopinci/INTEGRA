@@ -1,19 +1,3 @@
-/* function getCurrentModal() {
-
-  let modals = document.getElementsByClassName("modal");
-  
-  let currentModal = undefined;
-  
-  for(let m=0; m<modals.length; ++m) {
-    if(modals[m].style.display == "inline-block") {
-      currentModal = modals[m];
-    }
-  }
-  
-  return currentModal;
-} */
-
-
 function getCurrentWorkspace() {
   let tab;
   
@@ -30,6 +14,7 @@ function getCurrentWorkspace() {
   
   return tab;
 }
+
 
 function getCurrentModal() {
 
@@ -71,7 +56,7 @@ function drawPresetGraphs(graphType, parsedData, containerID) {
       canvasAnimated.height = "423";
       canvasAnimated.width = "683";
       newGraphBoxNGA.appendChild(canvasAnimated);
-      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, 100); 
+      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, 100, 50); 
 
       // Eccentricity GVR
       let newGraphBoxEcc = createNewGraphBox("2d", containerID, "ECC");
@@ -193,8 +178,6 @@ function plotScatter(dataArray, typedata, elementID, myTitle, xaxis, yaxis) {
   }
 ];
 
-  console.log("-x-x-x-x-x-x-x-");
-  console.log(data);
 
 let layout = {
   scene: {
@@ -237,7 +220,7 @@ return layout;
 }
 
 
-function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame) {
+function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame, interval) {
   
     if(startFrame < endFrame) {
       let canvas = document.getElementById(elementID).querySelector("canvas");
@@ -249,7 +232,7 @@ function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame) {
       
       canvas.style.background = "url("+image.src+")";
       
-      setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, startFrame + 1, endFrame), 50);
+      setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, startFrame + 1, endFrame, interval), interval);
     }
  
 }
@@ -259,7 +242,6 @@ function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame) {
 function plotNetwork(elementID, dataSet,frame){
 	let canvas = computeNetwork(elementID, dataSet, frame);
 	 document.getElementById(elementID).appendChild(canvas);
-
 }
 
 
@@ -475,11 +457,9 @@ return canvas;
 }
 
 
-
-
-function plotCustomScatter(inData, elementID, type) {
+function plotCustomScatter(inData, elementID, type, myTitle) {
   
-  Plotly.newPlot(elementID, inData[0], {showSendToCloud: true});
+  Plotly.newPlot(elementID, inData[0], {title: myTitle, showSendToCloud: true});
 
   Plotly.plot(elementID, inData).then(function () {
     let j=0;
@@ -562,164 +542,56 @@ function plotCustomHeat(inData, elementID, myTitle) {
       mode: 'afterall'
     })
   }
-
-
 }
 
-function plotNewCustomHeat(evt) {
 
-  let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
+function prepareCustomPlot(eventPossibility) {
+
+  let fileName = wsChosenDS[getCurrentWorkspace().id.split("tab")[1]];
   let inData = [];
   if(fileName.split(".")[1]==="2d") {
-
     inData = getAllPlayersXYAllFrames(fileMap[fileName]);
-    }
-    else if(fileName.split(".")[1]==="sn"){
-      inData = parseSN(fileMap[fileName]);
-    }
+  }
+  else if(fileName.split(".")[1]==="sn"){
+    inData = parseSN(fileMap[fileName]);
+  }
   
   let currentModal = getCurrentModal();
-  
   eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
-
   let graphData = defineCustomCode(inData);
-
-  let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
-  // 4 var graphs
-
-    let graphTitle = currentModal.querySelector(" .graphTitle").value;
-  
+  let countGraphs = document.querySelector("#" + getCurrentWorkspace().id + " .graphs ul").childElementCount;
+  let graphTitle = currentModal.querySelector(" .graphTitle").value;
   let graphIdentifier = "custom"+countGraphs;
   
-  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, graphIdentifier);
- 
-  plotCustomHeat(graphData, newCustomGraphBox.id, graphTitle);
-
+  if(eventPossibility) {
+     let visualizeEvents = currentModal.querySelector(" .selectVis").value;    
+     graphIdentifier += "+" + visualizeEvents;
+  }
+  
+  let newCustomGraphBox = createNewGraphBox("2d", getCurrentWorkspace().id, graphIdentifier);
+  return {data: graphData, graphBoxId: newCustomGraphBox.id, title: graphTitle};
 }
 
+
+function plotNewCustomHeat(evt) {
+  let info = prepareCustomPlot(false);
+  plotCustomHeat(info.data, info.graphBoxId, info.title);
+}
 
 
 function plotNewCustomStaticHeat(evt) {
-
-  let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
-  let inData = [];
-  if(fileName.split(".")[1]==="2d") {
-
-    inData = getAllPlayersXYAllFrames(fileMap[fileName]);
-    }
-    else if(fileName.split(".")[1]==="sn"){
-      inData = parseSN(fileMap[fileName]);
-    }
-  
-  let modals = document.getElementsByClassName("modal");
-  
-  let currentModal = undefined;
-  
-  for(let m=0; m<modals.length; ++m) {
-    if(modals[m].style.display == "inline-block") {
-      currentModal = modals[m];
-    }
-  }
-  
-  eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
-
-  let graphData = defineCustomCode(inData);
-
-  let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
-  // 4 var graphs
-
-  let visualizeEvents = currentModal.querySelector(" .selectVis").value;
-    let graphTitle = currentModal.querySelector(" .graphTitle").value;
-  
-  let graphIdentifier = "custom"+countGraphs+"+"+visualizeEvents;
-  
-  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, graphIdentifier);
- 
-  plotHeat(graphData[0], 'heatmap', newCustomGraphBox.id, graphTitle, '', '');
-
+  let info = prepareCustomPlot(true);
+  plotHeat(info.data[0], 'heatmap', info.graphBoxId, info.title, '', '');
 }
-
-
 
 
 function plotNewCustomScatter2D(evt) {
-  let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
-  let inData = [];
-  if(fileName.split(".")[1]==="2d") {
-
-    inData = getAllPlayersXYAllFrames(fileMap[fileName]);
+  let info = prepareCustomPlot(true);
+  plotCustomScatter(info.data, info.graphBoxId, 'scatter', info.title);
 }
-else if(fileName.split(".")[1]==="sn"){
-  inData = parseSN(fileMap[fileName]);
-}
-
-  
-  let modals = document.getElementsByClassName("modal");
-  
-  let currentModal = undefined;
-  
-  for(let m=0; m<modals.length; ++m) {
-    if(modals[m].style.display == "inline-block") {
-      currentModal = modals[m];
-    }
-  }
-
-  eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
-  let graphData = defineCustomCode(inData);
-
-  
-  let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
-
-  let visualizeEvents = currentModal.querySelector(" .selectVis").value;
-  
-  let graphTitle = currentModal.querySelector(" .graphTitle").value;
-  
-  let graphIdentifier = "custom"+countGraphs+"+"+visualizeEvents;
-  
-  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, graphIdentifier);
-  
-  // 4 var graphs
-  plotCustomScatter(graphData, newCustomGraphBox.id, 'scatter');
-}
-
-
 
 
 function plotNewCustomScatter3D(evt) {
-
-  let fileName = wsChosenDS[this.parentNode.parentNode.parentNode.parentNode.parentNode.id.split("tab")[1]];
-  let inData = [];
-  if(fileName.split(".")[1]==="2d") {
-
-    inData = getAllPlayersXYAllFrames(fileMap[fileName]);
-}
-else if(fileName.split(".")[1]==="sn"){
-  inData = parseSN(fileMap[fileName]);
-}
-
-  let modals = document.getElementsByClassName("modal");
-  
-  let currentModal = undefined;
-  
-  for(let m=0; m<modals.length; ++m) {
-    if(modals[m].style.display == "inline-block") {
-      currentModal = modals[m];
-    }
-  }
-  
-  eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
-  
-  let graphData = defineCustomCode(inData);
-  
- let countGraphs = document.querySelector("#" + this.parentNode.parentNode.parentNode.parentNode.parentNode.id + " .graphs ul").childElementCount;
-  
-  let graphTitle = currentModal.querySelector(" .graphTitle").value;
-  
-  let graphIdentifier = "custom"+countGraphs;
-  
-  let newCustomGraphBox = createNewGraphBox("2d", this.parentNode.parentNode.parentNode.parentNode.parentNode.id, graphIdentifier);
-  
- 
-  // 4 var graphs
-  plotCustomScatter(graphData, newCustomGraphBox.id, 'scatter3d');
+  let info = prepareCustomPlot(true);
+  plotCustomScatter(info.data, info.graphBoxId, 'scatter3d', info.title);
 }
