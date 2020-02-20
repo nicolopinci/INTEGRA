@@ -73,6 +73,8 @@ function createContainerElement() {
   minimizeButton.addEventListener("click", minimizeWindow);
     hideLeft.addEventListener("click", hideLeftMenu);
     
+  newContainer.querySelector(".modal").id = "myModal"+(document.getElementsByClassName("tabsGroup")[0].children[0].childElementCount-1);
+    
 	return newContainer;
 }
 
@@ -183,7 +185,7 @@ function createPlusSign(containerID) {
   plusButton.className = "graphPreview addNewGraph";
   plusLi.appendChild(plusButton); // add the button to the list (as the other graphs)
   document.querySelector("#"+containerID + " .graphs ul").appendChild(plusLi); // append the list element to the list
-
+  plusButton.id = "plus"+"_"+containerID;
   plusButton.addEventListener("click", addCustomGraph, false); // add action when the user clicks on the button
 }
 

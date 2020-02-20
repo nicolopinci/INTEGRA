@@ -18,21 +18,31 @@ function getCurrentWorkspace() {
 
 function getCurrentModal() {
 
-  let currentWorkspace = getCurrentWorkspace();
-  return document.querySelector("#" + currentWorkspace.id + " .modal");
+  let allModals = document.querySelectorAll(".modal");
+  for(let i=0; i<allModals.length; ++i) {
+    if(allModals[i].style.display == "inline-block") {
+      return allModals[i];
+    }
+  }
+}
+
+function getModalFromPlus(plusSign) {
+
+  tabNum = plusSign.id.split("_ctab")[1];
+  return document.querySelector(" #myModal" + tabNum);
 
 }
 
 
 function addCustomGraph(evt) {
 
-  getCurrentModal().style.display = "inline-block";
-  getCurrentModal().querySelector(" .close").addEventListener("click", closeModal, false);
-  getCurrentModal().querySelector(" .plotHeat").addEventListener("click", plotNewCustomHeat, false);
-  getCurrentModal().querySelector(" .plotHeatStatic").addEventListener("click", plotNewCustomStaticHeat, false);
-  getCurrentModal().querySelector(" .plotScatter2d").addEventListener("click", plotNewCustomScatter2D, false);
-  getCurrentModal().querySelector(" .plotScatter3d").addEventListener("click", plotNewCustomScatter3D, false);
-  getCurrentModal().querySelector(" .exportJS").addEventListener("click", exportCode, false);
+  getModalFromPlus(this).style.display = "inline-block";
+  getModalFromPlus(this).querySelector(" .close").addEventListener("click", closeModal, false);
+  getModalFromPlus(this).querySelector(" .plotHeat").addEventListener("click", plotNewCustomHeat, false);
+  getModalFromPlus(this).querySelector(" .plotHeatStatic").addEventListener("click", plotNewCustomStaticHeat, false);
+  getModalFromPlus(this).querySelector(" .plotScatter2d").addEventListener("click", plotNewCustomScatter2D, false);
+  getModalFromPlus(this).querySelector(" .plotScatter3d").addEventListener("click", plotNewCustomScatter3D, false);
+  getModalFromPlus(this).querySelector(" .exportJS").addEventListener("click", exportCode, false);
 }
 
 function drawPresetGraphs(graphType, parsedData, containerID) {
@@ -558,9 +568,11 @@ function prepareCustomPlot(eventPossibility) {
   }
   
   let currentModal = getCurrentModal();
+  let currentWorkspaceID = "ctab" + currentModal.id.split("Modal")[1];
+  
   eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
   let graphData = defineCustomCode(inData);
-  let countGraphs = document.querySelector("#" + getCurrentWorkspace().id + " .graphs ul").childElementCount;
+  let countGraphs = document.querySelector("#" + currentWorkspaceID + " .graphs ul").childElementCount;
   let graphTitle = currentModal.querySelector(" .graphTitle").value;
   let graphIdentifier = "custom"+countGraphs;
   
@@ -569,7 +581,7 @@ function prepareCustomPlot(eventPossibility) {
      graphIdentifier += "+" + visualizeEvents;
   }
   
-  let newCustomGraphBox = createNewGraphBox("2d", getCurrentWorkspace().id, graphIdentifier);
+  let newCustomGraphBox = createNewGraphBox("2d", currentWorkspaceID, graphIdentifier);
   return {data: graphData, graphBoxId: newCustomGraphBox.id, title: graphTitle};
 }
 
