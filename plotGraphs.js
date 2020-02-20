@@ -42,6 +42,7 @@ function addCustomGraph(evt) {
   getModalFromPlus(this).querySelector(" .plotHeatStatic").addEventListener("click", plotNewCustomStaticHeat, false);
   getModalFromPlus(this).querySelector(" .plotScatter2d").addEventListener("click", plotNewCustomScatter2D, false);
   getModalFromPlus(this).querySelector(" .plotScatter3d").addEventListener("click", plotNewCustomScatter3D, false);
+  getModalFromPlus(this).querySelector(" .plotBox").addEventListener("click", plotNewCustomBox, false);
   getModalFromPlus(this).querySelector(" .exportJS").addEventListener("click", exportCode, false);
 }
 
@@ -556,6 +557,21 @@ function plotCustomHeat(inData, elementID, myTitle) {
 }
 
 
+function plotCustomBox(inData, elementID, myTitle)  {
+ 
+  let traces = [];
+  
+  for (let i=0; i < inData[0].length; ++i) {
+	  traces.push({y: inData[0][i], type: "box", name: i+1});
+  }
+
+  console.log(traces);
+  
+  let layout = defineLayout(myTitle, '', '');
+  Plotly.newPlot(elementID, traces, layout, {showSendToCloud: true});
+}
+
+
 function prepareCustomPlot(eventPossibility) {
 
   let currentModal = getCurrentModal();
@@ -608,4 +624,10 @@ function plotNewCustomScatter2D(evt) {
 function plotNewCustomScatter3D(evt) {
   let info = prepareCustomPlot(true);
   plotCustomScatter(info.data, info.graphBoxId, 'scatter3d', info.title);
+}
+
+
+function plotNewCustomBox(evt) {
+  let info = prepareCustomPlot(false);
+  plotCustomBox(info.data, info.graphBoxId, info.title);
 }
