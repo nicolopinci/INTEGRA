@@ -10,7 +10,6 @@
   <script src="https://cdn.jsdelivr.net/npm/faster-delaunay@1.0.0/delaunay.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.3.2/gifshot.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas2image@1.0.5/canvas2image.js" defer></script>
-<script src="CCapture.all.min.js"></script>
 
 
   <script src="importColors.js" defer></script>
@@ -24,6 +23,7 @@
       <script src="soccerParser.js" defer></script>
   <script src="addWorkspace.js" defer></script>
   <script src="measures.js" defer></script>
+    <script src="saveCustomCode.js" defer></script>
 
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
@@ -40,7 +40,7 @@
 
     <span class="exportImport menuItems">
       <ul>
-        <li id="export">Export</li>
+        <!--li id="export">Export</li-->
         <li id="import"><label for="files">Import dataset</label><input type="file" id="files" value="Import datasets" name="files[]" multiple/></li>
         <li id="addW">Add workspace</li>
       </ul>
@@ -89,6 +89,7 @@
             <span class="plotButton plotHeatStatic">Plot static heatmap/GVR</span>
             <span class="plotButton plotScatter2d">Plot 2D scatter</span>
             <span class="plotButton plotScatter3d">Plot 3D scatter</span>
+            <span class="plotButton exportJS">Save</span>
           </div>
 
 

@@ -28,8 +28,6 @@ function createContainerElement() {
   body = document.getElementsByTagName("body")[0];
 
   let dialogDiv = document.createElement("div");
-  dialogDiv.style = "width:40vw; height:40vh;";
-  dialogDiv.style.boxShadow = "0px 0px 10px grey";
   dialogDiv.id = "dialog"+(document.getElementsByClassName("tabsGroup")[0].children[0].childElementCount-1);
   dialogDiv.className = "dialog";
   
@@ -41,19 +39,16 @@ function createContainerElement() {
   closeButton.className = "close";
   closeButton.name = "close";
   closeButton.innerHTML = "×";
-  closeButton.style.color = "white";
   
   let minimizeButton = document.createElement("button");
   minimizeButton.className = "minimize";
   minimizeButton.name = "minimize";
   minimizeButton.innerHTML = "_";
-  minimizeButton.style.color = "white";
   
    let hideLeft = document.createElement("button");
   hideLeft.className = "hideLeft";
   hideLeft.name = "hideLeft";
   hideLeft.innerHTML = "<";
-  hideLeft.style.color = "white";
   
   dialogDiv.appendChild(dialogTitlebar);
   dialogDiv.appendChild(closeButton);

@@ -32,6 +32,7 @@ function addCustomGraph(evt) {
   getCurrentModal().querySelector(" .plotHeatStatic").addEventListener("click", plotNewCustomStaticHeat, false);
   getCurrentModal().querySelector(" .plotScatter2d").addEventListener("click", plotNewCustomScatter2D, false);
   getCurrentModal().querySelector(" .plotScatter3d").addEventListener("click", plotNewCustomScatter3D, false);
+  getCurrentModal().querySelector(" .exportJS").addEventListener("click", exportCode, false);
 }
 
 function drawPresetGraphs(graphType, parsedData, containerID) {
