@@ -574,3 +574,13 @@ button .close, button .minimize, button .hideLeft {
   color: white;
 }
 
+.showDS {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  color: black;
+}
+
+.showDS:hover {
+  font-weight: bold;
+  cursor: help;
+}

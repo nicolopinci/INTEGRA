@@ -44,7 +44,18 @@ function addCustomGraph(evt) {
   getModalFromPlus(this).querySelector(" .plotScatter3d").addEventListener("click", plotNewCustomScatter3D, false);
   getModalFromPlus(this).querySelector(" .plotBox").addEventListener("click", plotNewCustomBox, false);
   getModalFromPlus(this).querySelector(" .exportJS").addEventListener("click", exportCode, false);
+  
+  let currentModal = getCurrentModal();
+  let currentWorkspaceID = "ctab" + currentModal.id.split("Modal")[1];
+  
+  let fileName = wsChosenDS[currentWorkspaceID.split("tab")[1]];
+  
+  if(fileName.split(".")[1] == "2d") {
+    getModalFromPlus(this).querySelector(" .showDS").href = "https://github.com/nicolopinci/INTEGRA/wiki/Soccer-dataset-structure";
+  }
 }
+
+
 
 function drawPresetGraphs(graphType, parsedData, containerID) {
   switch(graphType) {
@@ -575,7 +586,6 @@ function plotCustomBox(inData, elementID, myTitle)  {
 function prepareCustomPlot(eventPossibility) {
 
   let currentModal = getCurrentModal();
-  console.log(currentModal);
   let currentWorkspaceID = "ctab" + currentModal.id.split("Modal")[1];
   
   let fileName = wsChosenDS[currentWorkspaceID.split("tab")[1]];
