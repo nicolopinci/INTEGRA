@@ -558,7 +558,10 @@ function plotCustomHeat(inData, elementID, myTitle) {
 
 function prepareCustomPlot(eventPossibility) {
 
-  let fileName = wsChosenDS[getCurrentWorkspace().id.split("tab")[1]];
+  let currentModal = getCurrentModal();
+  let currentWorkspaceID = "ctab" + currentModal.id.split("Modal")[1];
+  
+  let fileName = wsChosenDS[currentWorkspaceID.split("tab")[1]];
   let inData = [];
   if(fileName.split(".")[1]==="2d") {
     inData = getAllPlayersXYAllFrames(fileMap[fileName]);
@@ -566,9 +569,6 @@ function prepareCustomPlot(eventPossibility) {
   else if(fileName.split(".")[1]==="sn"){
     inData = parseSN(fileMap[fileName]);
   }
-  
-  let currentModal = getCurrentModal();
-  let currentWorkspaceID = "ctab" + currentModal.id.split("Modal")[1];
   
   eval("function defineCustomCode(inData) {" + currentModal.querySelector(".JSCode").value + " return outData;}");
   let graphData = defineCustomCode(inData);
