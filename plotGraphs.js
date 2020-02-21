@@ -5,10 +5,14 @@ function getCurrentWorkspace() {
   tab = document.getElementsByClassName("container")[0];
   
   let existingTabs = document.getElementsByClassName("container"); // all the tabs currently opened
+  
   for(let t=0; t<existingTabs.length; ++t) { // for each tab
-    if(existingTabs[t].style.zIndex > zIndexMax && existingTabs[t].style.display != 'none') { // the workspace is the one of interest
+    console.log(existingTabs[t]);
+    console.log(parseInt(existingTabs[t].parentNode.style.zIndex));
+    
+    if(parseInt(existingTabs[t].parentNode.style.zIndex) > zIndexMax && existingTabs[t].style.display != 'none') { // the workspace is the one of interest
       tab = existingTabs[t]; // remember the ID of that workspace
-      zIndexMax = existingTabs[t].style.zIndex;
+      zIndexMax = parseInt(existingTabs[t].parentNode.style.zIndex);
     }
   }
   

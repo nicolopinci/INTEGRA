@@ -313,6 +313,8 @@ function canAddEvents(allGraphs, elem) {
 		    return false;
 }
 
+
+
 function addAnEvent(evt) {
 
   currentWorkspace = getCurrentWorkspace();
