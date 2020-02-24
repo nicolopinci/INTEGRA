@@ -61,19 +61,8 @@ function addCustomGraph(evt) {
 
 
 
-function drawPresetGraphs(graphType, parsedData, containerID) {
-  switch(graphType) {
-    case "2d":
-
-      
-      // Graph with players
-    let newGraphBoxNG = createNewGraphBox("2d", containerID, "NG");
-      newGraphBoxNG.style.height = "430px";
-      newGraphBoxNG.style.width = "690px";
-      newGraphBoxNG.style.padding = "4px";
-      plotNetwork(newGraphBoxNG.id, parsedData,0);
-
-	  // Graph with players (animated)
+function drawSoccerAnimated(graphType, parsedData, containerID) {
+  // Graph with players (animated)
     let newGraphBoxNGA = createNewGraphBox("2d", containerID, "NGA");
       newGraphBoxNGA.style.height = "452px";
       newGraphBoxNGA.style.width = "690px";
@@ -104,7 +93,24 @@ function drawPresetGraphs(graphType, parsedData, containerID) {
       newGraphBoxNGA.appendChild(timeBar);
       
       plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, parsedData.length-1, 1000); 
+      
+}
 
+function drawPresetGraphs(graphType, parsedData, containerID) {
+  switch(graphType) {
+    case "2d":
+
+      
+      // Graph with players
+    let newGraphBoxNG = createNewGraphBox("2d", containerID, "NG");
+      newGraphBoxNG.style.height = "430px";
+      newGraphBoxNG.style.width = "690px";
+      newGraphBoxNG.style.padding = "4px";
+      plotNetwork(newGraphBoxNG.id, parsedData,0);
+
+
+	  
+      
       // Eccentricity GVR
       let newGraphBoxEcc = createNewGraphBox("2d", containerID, "ECC");
       plotHeat(calculateGlobalEccAll(parsedData),'heatmap', newGraphBoxEcc.id, "Eccentricity GVR", "Time", "Player");
@@ -283,6 +289,7 @@ return layout;
 
 
 function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame, interval) {
+  
    
     if(startFrame < endFrame) {
 
@@ -290,7 +297,9 @@ function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame, interval)
       let ctx = canvas.getContext('2d');
       ctx.lineWidth = 1;
 
-	    var c = computeNetwork(elementID, dataset, startFrame);   
+      var c = computeNetwork(elementID, dataset, startFrame);   
+	    
+	    
 	    image = Canvas2Image.convertToPNG(c, canvas.width, canvas.height);
       
       canvas.style.background = "url("+image.src+")";
@@ -300,10 +309,10 @@ function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame, interval)
       
       if(playPauseValue == "OFF") {
         canvas.parentNode.querySelector("input").value = currentTime + 1;
-        setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, currentTime + 1, endFrame, interval), interval);
+        return setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, currentTime + 1, endFrame, interval), interval);
       }
       else {
-        setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, currentTime, endFrame, interval), interval);
+        return setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, currentTime, endFrame, interval), interval);
       }
     }
  

@@ -201,8 +201,10 @@ function createNewGraphBox(fileExtension, containerID, graphType) {
   
   let graphLi = document.createElement("li");
   newGraphBox.className = "graphPreview";
+ 
+  
   newGraphBox.id = containerID + "g" + fileExtension+"_"+graphType;
-    graphLi.appendChild(closeButton);
+  graphLi.appendChild(closeButton);
   graphLi.appendChild(newGraphBox);
 
   document.querySelector("#"+containerID + " .graphs ul").appendChild(graphLi);
@@ -383,6 +385,7 @@ function setTimeParameters(evt) {
     let currentFile = currentWorkspace.querySelector(".datasetList").value;
     
     if(timeParametersSet(currentWorkspace)) {
+      
       wsChosenFramerate[tabNum] = currentWorkspace.querySelector(" .framerate").value;
       wsChosenStartFrame[tabNum] = currentWorkspace.querySelector(" .frameStartS").value;
       wsChosenEndFrame[tabNum] = currentWorkspace.querySelector(" .frameEndS").value;
@@ -404,8 +407,16 @@ function setTimeParameters(evt) {
 	      allGraphs = document.querySelectorAll("#ctab" + tabNum + " .graphs ul li");
 
 	      for(let liEl = 0; liEl < allGraphs.length; ++liEl) {
-		      if(!allGraphs[liEl].firstChild.id.includes("custom") && !allGraphs[liEl].firstChild.id.includes("NGA")) {
-		        allGraphs[liEl].remove();
+	        let numChild = allGraphs[liEl].childElementCount;
+	        
+	        if(numChild > 1) {
+		        if(!allGraphs[liEl].children[1].id.includes("custom") && !allGraphs[liEl].children[1].id.includes("NGA")) {
+		          allGraphs[liEl].remove();
+            }
+          }
+          
+          if(allGraphs[liEl].children[0].className.includes("addNewGraph")) {
+            allGraphs[liEl].remove();
           }
 	      }
 
@@ -488,6 +499,8 @@ function chooseDataset(evt) { // When a dataset is selected from the datasets li
 
   switch(fileExtension) {
     case "2d": // soccer match
+    
+      drawSoccerAnimated("2d", getAllPlayersXYAllFrames(datasetContent), tabID);
       drawPresetGraphs("2d", getAllPlayersXYAllFrames(datasetContent), tabID); // draws the default graphs related to the soccer match
       document.querySelector("#"+document.getElementById(tabID).parentNode.id+" .titlebar").innerHTML = "[Soccer] " + fileName;
       break;
