@@ -607,3 +607,49 @@ button .close, button .minimize, button .hideLeft {
 	top:1px;
 }
 
+
+/* Source for input style: https://codepen.io/brigand/pen/qAgoi */
+
+input[type='range'] {  
+  -webkit-appearance: none;  
+  background-color: #073763;
+  height: 10px;
+  overflow: visible;
+  width: 300px;
+  position: relative;
+  border-radius: 3px;
+    margin-top: 10px;
+    margin-left: 10px;
+}  
+
+input[type='range']::-webkit-slider-thumb {  
+  -webkit-appearance: none;  
+  background-color: hotpink;
+  box-shadow: 1px 1px 8px #073763;  
+  width: 20px;  
+  height: 20px;
+  border-radius: 50%;
+  position: relative;
+  z-index: 100;
+} 
+
+input[type='range']::-webkit-slider-thumb:before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 40%;
+  width: 10%;
+  height: 200px;
+  display: block;
+  background: #073763;
+  z-index: -10;
+  box-shadow: 0 0 10px darkred;
+  opacity: .1;
+}
+
+ input[type='range']:hover::-webkit-slider-thumb:before {
+  opacity: 1;
+}
+
+
+
