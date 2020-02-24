@@ -316,6 +316,23 @@ function canAddEvents(allGraphs, elem) {
 }
 
 
+function redrawAllEvents() {
+  
+  currentWorkspace = getCurrentWorkspace();
+
+  let currentEvents = eventWsList[currentWorkspace.id.split("ctab")[1]];
+  	  let allGraphs = currentWorkspace.querySelectorAll(" .graphs li" );
+    
+  for(let thisEvent in currentEvents) {
+
+    for(let elem = 0; elem < allGraphs.length; ++elem) {
+			  if(canAddEvents(allGraphs, elem)) {
+		        Plotly.addTraces(allGraphs[elem].children[1], [{ x: [currentEvents[thisEvent][0]], name: thisEvent, marker: {color: currentEvents[thisEvent][1]}}]);
+		      }
+		    }
+  }
+}
+
 
 function addAnEvent(evt) {
 
@@ -430,9 +447,12 @@ function setTimeParameters(evt) {
 
         drawPresetGraphs(currentFile.split(".")[1], frameratedArray, "ctab"+tabNum); // Presets
         createPlusSign("ctab"+tabNum);
+        
+          redrawAllEvents();
 
      }
   }
+  
             
 }
 
