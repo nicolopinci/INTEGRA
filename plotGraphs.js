@@ -283,7 +283,7 @@ return layout;
 
 
 function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame, interval) {
-  
+   
     if(startFrame < endFrame) {
 
       let canvas = document.getElementById(elementID).querySelector("canvas");

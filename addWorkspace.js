@@ -404,7 +404,7 @@ function setTimeParameters(evt) {
 	      allGraphs = document.querySelectorAll("#ctab" + tabNum + " .graphs ul li");
 
 	      for(let liEl = 0; liEl < allGraphs.length; ++liEl) {
-		      if(!allGraphs[liEl].firstChild.id.includes("custom")) {
+		      if(!allGraphs[liEl].firstChild.id.includes("custom") && !allGraphs[liEl].firstChild.id.includes("NGA")) {
 		        allGraphs[liEl].remove();
           }
 	      }
@@ -498,4 +498,6 @@ function chooseDataset(evt) { // When a dataset is selected from the datasets li
     }
 
     createPlusSign(tabID); // add the + button to add customized graphs
+    
+    setTimeParameters(null);
 }
