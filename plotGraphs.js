@@ -75,7 +75,7 @@ function drawPresetGraphs(graphType, parsedData, containerID) {
 
 	  // Graph with players (animated)
     let newGraphBoxNGA = createNewGraphBox("2d", containerID, "NGA");
-      newGraphBoxNGA.style.height = "430px";
+      newGraphBoxNGA.style.height = "452px";
       newGraphBoxNGA.style.width = "690px";
       newGraphBoxNGA.style.padding = "4px";
       let canvasAnimated = document.createElement('canvas');
@@ -83,7 +83,27 @@ function drawPresetGraphs(graphType, parsedData, containerID) {
       canvasAnimated.height = "423";
       canvasAnimated.width = "683";
       newGraphBoxNGA.appendChild(canvasAnimated);
-      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, 100, 50); 
+      
+      let playButton = document.createElement('button');
+      playButton.className = "playButton";
+      playButton.innerHTML = "Play";
+      playButton.style.float = "left";
+      playButton.style.width = "10%";
+      playButton.addEventListener("click", togglePlay, false);
+      playButton.value = "ON";
+      newGraphBoxNGA.appendChild(playButton);
+      
+      let timeBar = document.createElement('input');
+      timeBar.type = "range";
+      timeBar.style.float = "left";
+      timeBar.style.width = "80%";
+      timeBar.min = 1;
+      timeBar.max = parsedData.length - 1;
+      timeBar.className = "timeBar";
+            
+      newGraphBoxNGA.appendChild(timeBar);
+      
+      plotAnimatedNetwork(newGraphBoxNGA.id, parsedData, 1, parsedData.length-1, 1000); 
 
       // Eccentricity GVR
       let newGraphBoxEcc = createNewGraphBox("2d", containerID, "ECC");
@@ -174,6 +194,20 @@ Plotly.newPlot(elementID, data, layout, {showSendToCloud: true});
 
 }
 
+
+function togglePlay() {
+  if(this.value=="OFF"){
+      this.value = "ON";
+      this.innerHTML = "Play";
+   }
+
+  else if(this.value=="ON"){
+      this.value = "OFF";
+      this.innerHTML = "Pause";
+   }
+}
+
+
 function plotScatter(dataArray, typedata, elementID, myTitle, xaxis, yaxis) {
 
   function extractData(key, da) {
@@ -247,9 +281,11 @@ return layout;
 }
 
 
+
 function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame, interval) {
   
     if(startFrame < endFrame) {
+
       let canvas = document.getElementById(elementID).querySelector("canvas");
       let ctx = canvas.getContext('2d');
       ctx.lineWidth = 1;
@@ -259,11 +295,19 @@ function plotAnimatedNetwork(elementID, dataset, startFrame, endFrame, interval)
       
       canvas.style.background = "url("+image.src+")";
       
-      setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, startFrame + 1, endFrame, interval), interval);
+      playPauseValue = canvas.parentNode.querySelector("button").value;
+      let currentTime = parseInt(canvas.parentNode.querySelector("input").value);
+      
+      if(playPauseValue == "OFF") {
+        canvas.parentNode.querySelector("input").value = currentTime + 1;
+        setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, currentTime + 1, endFrame, interval), interval);
+      }
+      else {
+        setTimeout(plotAnimatedNetwork.bind(null, elementID, dataset, currentTime, endFrame, interval), interval);
+      }
     }
  
 }
-
 
 
 function plotNetwork(elementID, dataSet,frame){
