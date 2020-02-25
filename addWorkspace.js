@@ -327,7 +327,11 @@ function redrawAllEvents() {
 
     for(let elem = 0; elem < allGraphs.length; ++elem) {
 			  if(canAddEvents(allGraphs, elem)) {
-		        Plotly.addTraces(allGraphs[elem].children[1], [{ x: [currentEvents[thisEvent][0]], name: thisEvent, marker: {color: currentEvents[thisEvent][1]}}]);
+			      let newFramerate = parseFloat(currentWorkspace.querySelector(".framerate").value);
+			      let oldTimestamp = parseFloat(currentEvents[thisEvent][0]);
+			      let startingPoint = parseFloat(currentWorkspace.querySelector(".frameStartS").value);
+			      let currentTS = newFramerate*(oldTimestamp - startingPoint);
+		        Plotly.addTraces(allGraphs[elem].children[1], [{ x: [currentTS], name: thisEvent, marker: {color: currentEvents[thisEvent][1]}}]);
 		      }
 		    }
   }
@@ -416,10 +420,10 @@ function setTimeParameters(evt) {
       
       let datasetLength = datasetData.length;
 
-      let frameRatio = Math.ceil(datasetLength/(5400*wsChosenFramerate[tabNum]));
+      let frameRatio = 1/wsChosenFramerate[tabNum];
 
 
-      if(frameRatio>1) {
+      if(frameRatio>=1) {
 
 	      allGraphs = document.querySelectorAll("#ctab" + tabNum + " .graphs ul li");
 
