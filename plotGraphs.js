@@ -538,22 +538,29 @@ return canvas;
 
 function plotCustomScatter(inData, elementID, type, myTitle) {
   
-  Plotly.newPlot(elementID, inData[0], {title: myTitle, showSendToCloud: true});
-
+  let layout = {
+  scene: {
+		xaxis:{title: ''},
+		yaxis:{title: ''},
+		zaxis:{title: ''},
+		},
+}
+  Plotly.newPlot(elementID, inData[0], layout, {showSendToCloud: true});
+  
   Plotly.plot(elementID, inData).then(function () {
     let j=0;
     for(j=0; j<inData.length; ++j) {
       let xValues = [];
       let yValues = [];
       let zValues = [];
-      for(let i=0; i<inData[j].length; ++i) {
+      for(let i=0; i<inData[j].length-1; ++i) {
         xValues.push(inData[j][i][0]);
         yValues.push(inData[j][i][1]);
         zValues.push(inData[j][i][2]);
       }
-   
+      
       let myData = [{x: xValues, y: yValues, z: zValues, type: type}];
- 
+      
       Plotly.addFrames(elementID, [
         {
           data: myData,
@@ -570,6 +577,7 @@ function plotCustomScatter(inData, elementID, type, myTitle) {
     for(let i=0; i<j; ++i) {
       anArray.push('frame'+i);
     }
+
     Plotly.animate(elementID, anArray, {
       frame: [
         {duration: 1000},
@@ -581,8 +589,8 @@ function plotCustomScatter(inData, elementID, type, myTitle) {
       ],
       mode: 'afterall'
     })
+             
   }
-
 
 }
 
@@ -631,8 +639,6 @@ function plotCustomBox(inData, elementID, myTitle)  {
   for (let i=0; i < inData[0].length; ++i) {
 	  traces.push({y: inData[0][i], type: "box", name: i+1});
   }
-
-  console.log(traces);
   
   let layout = defineLayout(myTitle, '', '');
   Plotly.newPlot(elementID, traces, layout, {showSendToCloud: true});
@@ -688,8 +694,9 @@ function plotNewCustomScatter2D(evt) {
 
 
 function plotNewCustomScatter3D(evt) {
-  let info = prepareCustomPlot(true);
+  let info = prepareCustomPlot(false);
   plotCustomScatter(info.data, info.graphBoxId, 'scatter3d', info.title);
+  Plotly.deleteTraces(graphBoxId, 0);
 }
 
 

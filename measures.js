@@ -280,18 +280,19 @@ function calculateGlobalEccAll(matchArray) {
 
 function sortEccAll(eccArray){
   let sortedEccArray = [];
-  for(let x=0; x<11; ++x) {
+  for(let x=0; x<12; ++x) {
    sortedEccArray.push([]);
   }
   for(let f=0; f<eccArray[0].length; ++f) {
    let array = [];
-   for(let p=0; p<11; ++p) {
-     array.push(eccArray[p][f]);
+   for(let p=0; p<12; ++p) {
+     array.push(parseFloat(eccArray[p][f]));
    }
-   array.sort();
+   array.sort(function(a,b) { return a - b;});
+
    array.reverse();
-   for(let p=0; p<11; ++p) {
-     sortedEccArray[p].push(array[p]);
+   for(let p=0; p<12; ++p) {
+     sortedEccArray[p].push(parseFloat(array[p]));
    }
   }
   return sortedEccArray;

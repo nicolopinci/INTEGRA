@@ -136,6 +136,11 @@ function activateFocus() {
   }
 }
 
+/*
+ * Designed by ZulNs, @Gorontalo, Indonesia, 7 June 2017
+ * Extended by FrankBuchholz, Germany, 2019
+*/
+
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (document.querySelector("#"+elmnt.id + " .titlebar")) {
@@ -177,7 +182,7 @@ function dragElement(elmnt) {
     document.onmousemove = null;
   }
 }
-
+/* */
 
 function createPlusSign(containerID) {
   let plusLi = document.createElement("li"); // create a list element (as the other graphs)
