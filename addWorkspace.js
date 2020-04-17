@@ -230,6 +230,43 @@ function createFirstWS() {
   var evObj = document.createEvent('Events');
   evObj.initEvent("click", true, false);
   document.getElementById("addW").dispatchEvent(evObj);
+
+  // Preload a file
+
+  var datasetList = document.getElementsByClassName('datasetList')[0];
+  var output = [];
+
+
+// read text from URL location
+    var request = new XMLHttpRequest();
+    request.open('GET', 'https://raw.githubusercontent.com/nicolopinci/INTEGRA/master/datasets/virtual_football_data/bot_full_10_games/bots_full_game1.2d', true);
+    request.send(null);
+    request.onreadystatechange = function () {
+        if (request.readyState === 4 && request.status === 200) {
+            var type = request.getResponseHeader('Content-Type');
+            if (type.indexOf("text") !== 1) {
+	fileMap["bots_full_game1.2d"] = request.responseText;
+	for(let i=0; i<document.querySelectorAll(".container").length; ++i) {
+		let datasetOption = document.createElement("option");
+		let optionText = document.createTextNode("bots_full_game1.2d");
+		datasetOption.value = "bots_full_game1.2d";
+		datasetOption.appendChild(optionText);
+		document.getElementsByClassName('datasetList')[i].appendChild(datasetOption);
+	      }
+document.getElementsByClassName("datasetList")[1].selectedIndex = 1;
+  document.getElementsByClassName("datasetList")[1].dispatchEvent(new Event('change'));  
+
+
+    
+
+
+            }
+        }
+    }
+ 
+
+  
+  
 }
 
 function resizeGraph(evt) {
